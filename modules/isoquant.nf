@@ -24,21 +24,24 @@ process ISOQUANT {
    input:
    path genome 
    tuple path(bam), path(bai)
+   val(model_strategy)
 
    output:
    path( "result/isoquant/OUT/*.gtf" ), emit: isoquant_gtf
    path( "result/isoquant/OUT/*" )
    
-   script:
+   script:   
    """
-   isoquant.py --reference ${genome}    \
-   --bam ${bam} \
-   --data_type nanopore    \
-   --clean_start    \
-   --model_construction_strategy assembly \
-   -t 12 \
+   isoquant.py --reference ${genome}               \
+   --bam ${bam}                                    \
+   --data_type nanopore                            \
+   --clean_start                                   \
+   --stranded forward                              \
+   --model_construction_strategy ${model_strategy} \
+   -t 12                                           \
    -o ${params.OUTPUT}
    """
 }  
+
 
 
