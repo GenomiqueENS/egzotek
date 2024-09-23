@@ -23,14 +23,15 @@ process MINIMAP2 {
       
       input:
       path genome
-      path fasta 
+      path fasta
+      val intron_length 
       
       output:
       path( "*.sam" ), emit: isoquant_sam
       
       script:
       """
-      minimap2 -ax splice -uf -k14 \
+      minimap2 -G ${intron_length} -ax splice --secondary=no -uf -k14 \
       ${genome} ${fasta} >  ${fasta.SimpleName}.sam
       """
 }

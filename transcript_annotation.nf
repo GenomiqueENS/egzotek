@@ -68,7 +68,7 @@ workflow {
    RESTRANDER(reads_ch, config_ch)
 
    // Transcript annotation modules: Isoquant 
-   MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq)
+   MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length)
    SAMTOOLS(MINIMAP2.out.isoquant_sam)
    SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
    ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
@@ -86,6 +86,11 @@ workflow {
    GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
    MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
    MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+
+
+   // if (params.oriented == false) {
+   //      RESTRANDER(reads_ch, config_ch) 
+   //      }
 }
 
 // Display pipeline execution summary upon completion
