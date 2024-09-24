@@ -60,6 +60,33 @@ process RNABLOOM_AGAT_GFF2GTF {
 }
 
 /*
+* AGAT Conversion gff > gtf
+*/
+
+process MERGE_AGAT_GFF2GTF {
+   // where to store the results and in which way
+   debug true
+   publishDir( params.OUTPUT, mode: 'copy' )
+
+   // show in the log which input file is analysed
+   tag( "${merged_gff}" )
+   
+   input:
+   path merged_gff 
+   
+   output:
+   path("merged_transcripts.gtf"), emit: merged_agat_gtf
+   
+   script:
+   """
+   /usr/local/bin/agat_convert_sp_gff2gtf.pl \
+   --gff ${merged_gff} \
+   -o merged_transcripts.gtf
+   """
+}
+
+
+/*
 * AGAT Regroupement des modèles
 */
 
