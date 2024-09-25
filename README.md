@@ -18,10 +18,16 @@ Egzotek is a bioinformatic pipeline designed for transcript annotation of non-m
 5. Complement annotation ([agat](https://github.com/NBISweden/AGAT))
 6. Clusterisation ([gffread](https://github.com/gpertea/gffread))
 
-## 1. Use Egzotek
+## Installing Egzotek
 ```bash
 $ git clone git@github.com:GenomiqueENS/egzotek.git
 $ cd egzotek
+```
+## Configuration
+Customize runs by editing the nextflow.config file and/or specifying parameters at the command line.
+
+## Usage
+```bash
 $ nextflow run transcript_annotation.nf
 ```
 
