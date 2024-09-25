@@ -28,7 +28,7 @@ process ISOQUANT {
 
    output:
    path( "result/isoquant/OUT/*.gtf" ), emit: isoquant_gtf
-   path( "result/isoquant/OUT/*" )
+   path( "result/isoquant/OUT/*" ), emit: isoquant_counts
    
    script:   
    """
@@ -42,6 +42,5 @@ process ISOQUANT {
    -o ${params.OUTPUT}
    """
 }  
-
 
 

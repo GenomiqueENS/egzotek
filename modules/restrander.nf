@@ -18,7 +18,7 @@ process RESTRANDER {
 
    // show in the log which input file is analysed
    debug true
-   tag( "${bam}" )
+   tag( "${fastq}" )
 
    input:
    path fastq 
@@ -29,8 +29,8 @@ process RESTRANDER {
 
    script:
    """
-   restrander/restrander ${fastq} \
-   ${fastq.SimpleName}_restrander.fastq.gz
+   /usr/local/restrander/restrander ${fastq} \
+   ${fastq.SimpleName}_restrander.fastq.gz  \
    ${config}
    """
 }  
