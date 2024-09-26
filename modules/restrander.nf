@@ -25,12 +25,12 @@ process RESTRANDER {
    path config
 
    output:
-   path( "result/restrander/*_restrander.fastq.gz" ), emit: restrander_fastq
+   path( "result/restrander/*.fastq.gz" ), emit: restrander_fastq
 
    script:
    """
    /usr/local/restrander/restrander ${fastq} \
-   ${fastq.SimpleName}_restrander.fastq.gz  \
+   ${fastq.SimpleName}.fastq.gz  \
    ${config}
    """
 }  
