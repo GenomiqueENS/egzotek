@@ -19,11 +19,11 @@ process ISOQUANT {
 
    // show in the log which input file is analysed
    debug true
-   tag( "${bam}" )
+   tag( "${samplesheet}" )
 
    input:
    path genome 
-   tuple path(bam), path(bai)
+   path samplesheet
    val(model_strategy)
 
    output:
@@ -33,7 +33,7 @@ process ISOQUANT {
    script:   
    """
    isoquant.py --reference ${genome}               \
-   --bam ${bam}                                    \
+   --yaml ${samplesheet}                                    \
    --data_type nanopore                            \
    --clean_start                                   \
    --stranded forward                              \

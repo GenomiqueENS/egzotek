@@ -41,6 +41,7 @@ include { RNA_BLOOM }                                                           
 include { RNABLOOM_MINIMAP2 }                                                                   from './modules/rnabloom_minimap2.nf'
 include { RNABLOOM_PAFTOOLS }                                                                   from './modules/rnabloom_paftools.nf'
 include { RNABLOOM_AGAT_BED2GFF; RNABLOOM_AGAT_GFF2GTF; AGAT_COMPLEMENT; MERGE_AGAT_GFF2GTF }   from './modules/agat.nf'
+include { SAMPLESHEET2YAML }                                                                    from './modules/samplesheet2yaml.nf'
 include { SAMTOOLS }                                                                            from './modules/samtools.nf'
 include { SAMTOOLS_MERGE }                                                                      from './modules/samtools_merge.nf'
 /*
@@ -53,7 +54,7 @@ annot_ch = Channel.of( params.annotation )
 config_ch = file( params.config, checkIfExists:true )
 reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
 shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
-
+samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
 
 params.eoulsan_genome = "genome://hg19ens105"
 params.eoulsan_annotation = "gtf://hg19ens105"
@@ -78,13 +79,15 @@ workflow{
    if (params.oriented == false) {
       RESTRANDER(reads_ch, config_ch)
 
-         // Transcript annotation modules: Isoquant
+      // Transcript annotation modules: Isoquant
       MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length)
       SAMTOOLS(MINIMAP2.out.isoquant_sam)
       SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
+      SAMPLESHEET2YAML(samplesheet_ch)
+      ISOQUANT(genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
 
-         // Transcript annotation modules: RNABloom
+      // Transcript annotation modules: RNABloom
       MERGE_FASTQ(RESTRANDER.out.restrander_fastq.collect())
       RNA_BLOOM(MERGE_FASTQ.out.merged_fastq, shortread_ch)
       RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
@@ -92,7 +95,7 @@ workflow{
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
-         // Merging of transcript annotations
+      // Merging of transcript annotations
       AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)
       GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
