@@ -24,7 +24,7 @@ def csv_to_exact_yaml(csv_file, yaml_file, path_prefix=None):
     # Manually formatting the YAML data
     with open(yaml_file, 'w') as f:
         f.write("[\n")
-        f.write('  data format: "fastq",\n')
+        f.write('  data format: "bam",\n')
 
         for condition, details in data.items():
             f.write("  {\n")
