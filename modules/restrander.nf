@@ -25,7 +25,7 @@ process RESTRANDER {
    path config
 
    output:
-   path( "result/restrander/*.fastq.gz" ), emit: restrander_fastq
+   path( "${fastq.SimpleName}.fastq.gz" ), emit: restrander_fastq
 
    script:
    """
