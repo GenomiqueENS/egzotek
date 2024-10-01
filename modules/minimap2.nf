@@ -33,8 +33,6 @@ process MINIMAP2 {
       script:
       def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
       """
-      minimap2 -G ${intron_length} \ 
-      -ax splice --secondary=no -uf -k14 ${junc_bed_arg} \
-      ${genome} ${fasta} >  ${fasta.SimpleName}.sam
+      minimap2 -G ${intron_length} -ax splice --secondary=no -uf -k14 ${junc_bed_arg} ${genome} ${fasta} >  ${fasta.SimpleName}.sam
       """
 }
