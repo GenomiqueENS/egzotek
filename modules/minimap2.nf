@@ -24,14 +24,17 @@ process MINIMAP2 {
       input:
       path genome
       path fasta
-      val intron_length 
+      val intron_length
+      path junc_bed
       
       output:
       path( "*.sam" ), emit: isoquant_sam
       
       script:
+      def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
       """
-      minimap2 -G ${intron_length} -ax splice --secondary=no -uf -k14 \
+      minimap2 -G ${intron_length} \ 
+      -ax splice --secondary=no -uf -k14 ${junc_bed_arg} \
       ${genome} ${fasta} >  ${fasta.SimpleName}.sam
       """
 }
