@@ -22,18 +22,19 @@ process ISOQUANT {
    tag( "${samplesheet}" )
 
    input:
+   val ready
    path genome 
    path samplesheet
    val(model_strategy)
 
    output:
-   path( "result/isoquant/OUT/*.gtf" ), emit: isoquant_gtf
-   path( "result/isoquant/OUT/*" ), emit: isoquant_counts
+   path( "result/isoquant/*/*.gtf" ), emit: isoquant_gtf
+   path( "result/isoquant/*/*" ), emit: isoquant_counts
    
    script:   
    """
    isoquant.py --reference ${genome}               \
-   --yaml ${samplesheet}                                    \
+   --yaml ${samplesheet}                           \
    --data_type nanopore                            \
    --clean_start                                   \
    --stranded forward                              \
