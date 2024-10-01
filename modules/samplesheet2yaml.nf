@@ -27,7 +27,6 @@ process SAMPLESHEET2YAML {
    path( "dataset.yaml" ), emit: dataset_yaml
    
    script:
-   base_path = params.reads.substring(0, params.reads.lastIndexOf('/'))   
    """
    python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml --path $projectDir/result/isoquant
    """
