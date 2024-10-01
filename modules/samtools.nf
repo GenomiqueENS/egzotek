@@ -25,6 +25,7 @@ process SAMTOOLS {
    output:
    path("*.bam"), emit: samtools_bam
    path("*.bam.bai")
+   val("process_complete"), emit: process_control
       
    script:
    """
