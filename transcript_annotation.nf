@@ -63,7 +63,7 @@ params.mapperName = "minimap2"
 params.mapperVersion = "2.24"
 params.mapperFlavor = ""
 params.indexerArguments = "-x splice"
-params.mappersArguments = "-x splice --eqx --secondary=no --junc-bed /import/rhodos10/ressources/sequencages/bed12/only_chr_Homo_sapiens_ens105.bed"
+params.mappersArguments = "-x splice --eqx --secondary=no   "
 params.tmpDir = projectDir + "/tmp"
 params.binaryDir = "/tmp"
 params.storages = read_conf()
@@ -89,12 +89,12 @@ workflow{
       //ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
 
       // Transcript annotation modules: RNABloom
-      //MERGE_FASTQ(RESTRANDER.out.restrander_fastq.collect())
-      //RNA_BLOOM(MERGE_FASTQ.out.merged_fastq, shortread_ch)
-      //RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
-      //RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
-      //RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
-      //RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
+      MERGE_FASTQ(samplesheet_ch, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
+      RNA_BLOOM(MERGE_FASTQ.out.merged_fastq, shortread_ch)
+      RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
+      RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
+      RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
+      RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
       //AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)

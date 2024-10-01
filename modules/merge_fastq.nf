@@ -14,16 +14,18 @@ process MERGE_FASTQ {
    publishDir( params.OUTPUT, mode: 'copy' )
 
    // show in the log which input file is analysed
-   tag( "Merge fastq ${filtered_fastq}" )
+   tag( "Merge fastq" )
 
    input:
-   path filtered_fastq 
+   path samplesheet
+   val restrander_dir
+   val ready
 
    output:
-   path( "merged_filtered.fastq" ), emit: merged_fastq
+   path( "*.fastq" ), emit: merged_fastq
    
    script:
    """
-   cat ${filtered_fastq} >> merged_filtered.fastq
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet} $projectDir/${restrander_dir}/
    """
-}  
+}
