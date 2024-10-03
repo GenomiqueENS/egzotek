@@ -19,11 +19,11 @@ def merge_fastq_by_condition(samplesheet_path, fastq_dir):
         # Get the list of fastq files for this condition
         condition_fastqs = samplesheet[samplesheet['condition'] == condition]['fastq']
 
-        # Create an output file for the merged fastq files in gzipped format
-        output_file = os.path.join(os.getcwd(), f"{condition}.fastq.gz")  # Save in current working directory
+        # Create an output file for the merged fastq files
+        output_file = os.path.join(os.getcwd(), f"{condition}.fastq")  # Save in current working directory
 
-        # Open the output file in write mode for gzip
-        with gzip.open(output_file, 'wb') as outfile:
+        # Open the output file in write mode
+        with open(output_file, 'wb') as outfile:
             # Loop through each fastq file for this condition
             for fastq in condition_fastqs:
                 found_file = None
@@ -36,12 +36,12 @@ def merge_fastq_by_condition(samplesheet_path, fastq_dir):
                         break
 
                 if found_file:
-                    # If the file is compressed (.gz), read it as is
+                    # If the file is compressed (.gz), we need to decompress it before writing
                     if found_file.endswith('.gz'):
                         with gzip.open(found_file, 'rb') as infile:
                             shutil.copyfileobj(infile, outfile)
                     else:
-                        # For uncompressed files, read and write them directly
+                        # For uncompressed files
                         with open(found_file, 'rb') as infile:
                             shutil.copyfileobj(infile, outfile)
                 else:
