@@ -5,7 +5,7 @@
 */
 
 // Parameter definitions
-params.OUTPUT = "result/gffread"
+params.OUTPUT = "result/consensus"
 
 /*
 * AGAT Conversion bed > gff
@@ -21,15 +21,15 @@ process GFFREAD {
     
     input:
     path genome
-    path polished_gtf 
+    tuple val(condition),path(polished_gtf)
     
     output:
-    path("transcripts_polished_clustersMKZ.gff3"), emit: gffread_gff3
+    tuple val(condition), path("${condition}.transcripts_polished_clustersMKZ.gff3"), emit: gffread_gff3
     
     script:
     """
     gffread  -g ${genome} \
-    -o transcripts_polished_clustersMKZ.gff3 \
+    -o ${condition}.transcripts_polished_clustersMKZ.gff3 \
     -M -K -Z ${polished_gtf} \
     """
 }

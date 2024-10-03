@@ -63,7 +63,7 @@ params.mapperName = "minimap2"
 params.mapperVersion = "2.24"
 params.mapperFlavor = ""
 params.indexerArguments = "-x splice"
-params.mappersArguments = "-x splice --eqx --secondary=no   "
+params.mappersArguments = "-x splice --eqx --secondary=no -G 20000"
 params.tmpDir = projectDir + "/tmp"
 params.binaryDir = "/tmp"
 params.storages = read_conf()
@@ -75,32 +75,36 @@ params.expressionConf = [ "genomic.type" : "exon", "attribute.id" : "gene_id", "
    WORKFLOW - Transcript Annotation
 ========================================================================================
 */
+params.merged_gtf = "/home/brunon/shares-net/sequencages/analyses/RETARDannotHE_A2022/2MM/salome_nf/github/egzotek/test/merge/*_{isoquant,rnabloom}.gtf"
+merged_gtf_ch = Channel.fromFilePairs(params.merged_gtf, flat:true)
 
 workflow{
    if (params.oriented == false) {
-      RESTRANDER(reads_ch, config_ch)
+      //RESTRANDER(reads_ch, config_ch)
 
       // Transcript annotation modules: Isoquant
       MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed_ch)
       SAMTOOLS(MINIMAP2.out.isoquant_sam)
-      //SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
+      SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
       SAMPLESHEET2YAML(samplesheet_ch)
       ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       //ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
 
       // Transcript annotation modules: RNABloom
       MERGE_FASTQ(samplesheet_ch, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
-      RNA_BLOOM(MERGE_FASTQ.out.merged_fastq, shortread_ch)
+      RNA_BLOOM(MERGE_FASTQ.out.merged_fastq.flatten(), shortread_ch)
       RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
+      RNABLOOM_MINIMAP2(genome_ch,rnabloom_fasta_ch)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
       //AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)
-      //GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
-      //MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
-      //MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+      AGAT_COMPLEMENT(merged_gtf_ch)
+      GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
+      MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
+      MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
    } else if (params.oriented == true) {
       // Index creation
       index_ch = EOULSAN_INDEX(genome_ch, params.mapperName, params.mapperVersion, params.mapperFlavor, params.storages, params.tmpDir, params.binaryDir, params.indexerArguments)

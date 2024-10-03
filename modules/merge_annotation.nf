@@ -5,10 +5,10 @@
 */
 
 // Parameter definitions
-params.OUTPUT = "result/merge_annotation"
+params.OUTPUT = "result/consensus"
 
 /*
-* Merge  Isoquant trancript model
+* Merge  Isoquant and RNABloom trancript models
 */
 
 process MERGE_ANNOTATION {
@@ -18,17 +18,18 @@ process MERGE_ANNOTATION {
 
     // show in the log which input file is analysed
     debug true
+    tag( "${merged_transcript}" )
 
     input:
     path annotation 
-    path merged_transcript
+    tuple val(condition), path(merged_transcript)
 
     output:
-    path( "merged_annotation.gtf" ), emit: merged_annotation
+    tuple val(condition), path( "${condition}.merged_annotation.gtf" ), emit: merged_annotation
     
     script:   
     """
     bash $projectDir/bin/merge-annotation.sh ${annotation} \
-    ${merged_transcript} > merged_annotation.gtf
+    ${merged_transcript} > ${condition}.merged_annotation.gtf
     """
 }  
