@@ -12,7 +12,11 @@ process RNA_BLOOM {
    // where to store the results and in which way
    debug true
    cpus 24
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir (params.OUTPUT, mode: 'copy',
+      saveAs: { fn ->
+         if (fn.endsWith("rnabloom.transcripts.fa")) { "${longread.SimpleName}.transcripts.fa" }
+      }
+   )
 
    // show in the log which input file is analysed
    tag( "RNA-Bloom ${longread}" )
@@ -22,8 +26,8 @@ process RNA_BLOOM {
    path shortread
 
    output:
-   path( "rnabloom_assembly/*.transcripts.fa" ), emit: rnabloom_fasta
-   path( "rnabloom_assembly/*" )
+   path( "${longread.SimpleName}/rnabloom.transcripts.fa" ), emit: rnabloom_fasta
+   path( "${longread.SimpleName}/*" )
    
    script:
    // argument for optional shortreads channel
@@ -33,6 +37,7 @@ process RNA_BLOOM {
    -long ${longread} \
    -stranded    \
    ${shortread_arg} \
-   -t 12
+   -t 12 \
+   -outdir ${longread.SimpleName}
    """
 }  

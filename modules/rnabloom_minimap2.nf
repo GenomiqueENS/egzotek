@@ -26,12 +26,12 @@ process RNABLOOM_MINIMAP2 {
    path bloomfasta 
    
    output:
-   path( "rnabloom_aln.sam" ), emit: rnabloom_sam
+   path( "${bloomfasta.SimpleName}.sam" ), emit: rnabloom_sam
    
    script:
    """
    minimap2 -ax splice -uf -k14 \
-   ${genome} ${bloomfasta} > rnabloom_aln.sam
+   ${genome} ${bloomfasta} > ${bloomfasta.SimpleName}.sam
    """
 
 }

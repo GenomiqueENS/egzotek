@@ -23,11 +23,11 @@ process RNABLOOM_PAFTOOLS {
    path bloomsam 
    
    output:
-   path( "rnabloom_aln.bed" ), emit: rnabloom_bed
+   path( "${bloomsam.SimpleName}.bed" ), emit: rnabloom_bed
    
    script:
    """
-   paftools.js splice2bed ${bloomsam} > rnabloom_aln.bed
+   paftools.js splice2bed ${bloomsam} > ${bloomsam.SimpleName}.bed
    """
 
 }
