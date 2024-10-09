@@ -1,7 +1,7 @@
 # Egzotek
 Egzotek is a bioinformatic pipeline designed for transcript annotation of non-model species with incomplete or poorly annotated genomes. It is developed to build a consensus annotated genome usig long RNA reads. 
 
-![transcriptannotation_wf](https://github.com/GenomiqueENS/egzotek/blob/main/transcript_annotation_wf.jpg)
+![transcriptannotation_wf](https://github.com/GenomiqueENS/egzotek/blob/main/transcript_annotation_wf.png)
 
 
 1. Read orientation ([eoulsan](https://github.com/GenomiqueENS/eoulsan))
