@@ -84,7 +84,7 @@ workflow{
       // Transcript annotation modules: Isoquant
       MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed_ch)
       SAMTOOLS(MINIMAP2.out.isoquant_sam)
-      SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect()) LEAVE OUT
+      //SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect()) LEAVE OUT
       SAMPLESHEET2YAML(samplesheet_ch)
       ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       //ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy) LEAVE OUT
@@ -92,7 +92,7 @@ workflow{
       // Transcript annotation modules: RNABloom
       MERGE_FASTQ(samplesheet_ch, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
       RNA_BLOOM(MERGE_FASTQ.out.merged_fastq.flatten(), shortread_ch)
-      RNABLOOM_RENAME(RNA_BLOOM.out.rnabloom_fasta)
+      //RNABLOOM_RENAME(RNA_BLOOM.out.rnabloom_fasta) LEAVE OUT
       RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
       //RNABLOOM_MINIMAP2(genome_ch,rnabloom_fasta_ch) LEAVE OUT
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
@@ -100,7 +100,7 @@ workflow{
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
-      AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)
+      AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
       //AGAT_COMPLEMENT(merged_gtf_ch) LEAVE OUT
       GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)

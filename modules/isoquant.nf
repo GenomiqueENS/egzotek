@@ -22,7 +22,7 @@ process ISOQUANT {
    tag( "${samplesheet}" )
 
    input:
-   //val ready
+   val ready
    path genome 
    path samplesheet
    val model_strategy
