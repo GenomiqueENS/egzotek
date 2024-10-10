@@ -23,10 +23,10 @@ process RNABLOOM_MINIMAP2 {
    
    input:
    path genome
-   path bloomfasta 
+   tuple val(condition), path(bloomfasta)
    
    output:
-   path( "${bloomfasta.SimpleName}.sam" ), emit: rnabloom_sam
+   tuple val(condition), path( "${bloomfasta.SimpleName}.sam" ), emit: rnabloom_sam
    
    script:
    """

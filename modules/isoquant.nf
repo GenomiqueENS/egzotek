@@ -5,7 +5,7 @@
 */
 
 // Parameter definitions
-params.OUTPUT = "result/isoquant"
+params.OUTPUT = "result/"
 
 /*
 * Create Isoquant trancript model
@@ -22,14 +22,14 @@ process ISOQUANT {
    tag( "${samplesheet}" )
 
    input:
-   val ready
+   //val ready
    path genome 
    path samplesheet
-   val(model_strategy)
+   val model_strategy
 
    output:
-   path( "result/isoquant/*/*.gtf" ), emit: isoquant_gtf
-   path( "result/isoquant/*/*" ), emit: isoquant_counts
+   path( "isoquant/*/*.gtf" ), emit: isoquant_gtf
+   path( "isoquant/*/*" ), emit: isoquant_counts
    
    script:   
    """
@@ -40,7 +40,8 @@ process ISOQUANT {
    --stranded forward                              \
    --model_construction_strategy ${model_strategy} \
    -t 12                                           \
-   -o ${params.OUTPUT}
+   -o isoquant \
+   && for file in isoquant/*/*.transcript_models.gtf; do cp "\$file" "\${file%.transcript_models.gtf}_isoquant.gtf"; done
    """
 }  
 

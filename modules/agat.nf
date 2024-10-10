@@ -17,10 +17,10 @@ process RNABLOOM_AGAT_BED2GFF {
    tag( "${bloombed}" )
    
    input:
-   path bloombed 
+   tuple val(condition), path(bloombed)
    
    output:
-   path("${bloombed.SimpleName}.gff"), emit: agat_gff
+   tuple val(condition), path("${bloombed.SimpleName}.gff"), emit: agat_gff
    
    script:
    """
@@ -43,16 +43,16 @@ process RNABLOOM_AGAT_GFF2GTF {
    tag( "${agat_gtf}" )
    
    input:
-   path agat_gtf 
+   tuple val(condition), path(agat_gtf)
    
    output:
-   tuple val(condition), path("${agat_gtf.SimpleName}.gtf"), emit: agat_gtf
+   tuple val(condition), path("${agat_gtf.SimpleName}_rnabloom.gtf"), emit: agat_gtf
    
    script:
    """
    /usr/local/bin/agat_convert_sp_gff2gtf.pl \
    --gff ${agat_gtf} \
-   -o ${agat_gtf.SimpleName}.gtf
+   -o ${agat_gtf.SimpleName}_rnabloom.gtf
    """
 }
 

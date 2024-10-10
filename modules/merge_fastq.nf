@@ -13,9 +13,6 @@ process MERGE_FASTQ {
    debug true
    publishDir( params.OUTPUT, mode: 'copy' )
 
-   // show in the log which input file is analysed
-   tag( "Merge fastq" )
-
    input:
    path samplesheet
    val restrander_dir

@@ -20,10 +20,10 @@ process RNABLOOM_PAFTOOLS {
    tag( "${bloomsam}" )
    
    input:
-   path bloomsam 
+   tuple val(condition), path(bloomsam)
    
    output:
-   path( "${bloomsam.SimpleName}.bed" ), emit: rnabloom_bed
+   tuple val(condition), path( "${bloomsam.SimpleName}.bed" ), emit: rnabloom_bed
    
    script:
    """

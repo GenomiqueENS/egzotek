@@ -28,7 +28,7 @@ process MINIMAP2 {
       path junc_bed
       
       output:
-      path( "*.sam" ), emit: isoquant_sam
+      path( "${fasta.SimpleName}.sam" ), emit: isoquant_sam
       
       script:
       def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
