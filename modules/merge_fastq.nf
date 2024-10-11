@@ -8,7 +8,7 @@ params.OUTPUT = "result/rnabloom"
 /*
 * Merge Fast
 */
-process MERGE_FASTQ {
+process MERGE_FASTQ_RESTRANDER {
    // where to store the results and in which way
    debug true
    publishDir( params.OUTPUT, mode: 'copy' )
@@ -24,5 +24,23 @@ process MERGE_FASTQ {
    script:
    """
    python3 $projectDir/bin/merge_fastq.py ${samplesheet} $projectDir/${restrander_dir}/
+   """
+}
+
+process MERGE_FASTQ_EOULSAN {
+   // where to store the results and in which way
+   debug true
+   publishDir( params.OUTPUT, mode: 'copy' )
+
+   input:
+   path samplesheet
+
+   output:
+   path( "*.fastq" ), emit: merged_fastq
+   
+   script:
+   def base_path = params.reads.substring(0, params.reads.lastIndexOf('/'))  
+   """
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet} ${base_path}
    """
 }
