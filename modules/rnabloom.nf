@@ -12,11 +12,7 @@ process RNA_BLOOM {
    // where to store the results and in which way
    debug true
    cpus 24
-   publishDir (params.OUTPUT, mode: 'copy'
-      //,saveAs: { fn ->
-      //   if (fn.endsWith("rnabloom.transcripts.fa")) { "${longread.SimpleName}.fa" }
-      //}
-   )
+   publishDir (params.OUTPUT, mode: 'copy')
 
    // show in the log which input file is analysed
    tag( "RNA-Bloom ${longread}" )
@@ -26,7 +22,7 @@ process RNA_BLOOM {
    path shortread
 
    output:
-   tuple val(condition), path( "${longread.SimpleName}/${longread.SimpleName}.fa" ), emit: rnabloom_fasta
+   tuple val(condition), path("${longread.SimpleName}/${longread.SimpleName}.fa" ), emit: rnabloom_fasta
    path( "${longread.SimpleName}/*" )
    
    script:
@@ -40,6 +36,6 @@ process RNA_BLOOM {
    ${shortread_arg} \
    -t 12 \
    -outdir ${longread.SimpleName} \
-   && mv  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
+   && cp  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
    """
 }  
