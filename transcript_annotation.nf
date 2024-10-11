@@ -32,14 +32,13 @@ include { EOULSAN_MAPPING }                                                     
 include { EOULSAN_SAM_FILTER }                                                                  from './modules/filtersam.nf'
 include { EOULSAN_EXPRESSION }                                                                  from './modules/expression.nf'
 include { GFFREAD }                                                                             from './modules/gffread.nf' 
-include { ISOQUANT }                                                                            from './modules/isoquant.nf'
+include { ISOQUANT; ISOQUANT_CONDITION }                                                        from './modules/isoquant.nf'
 include { MINIMAP2 }                                                                            from './modules/minimap2.nf'
 include { MERGE_ANNOTATION }                                                                    from './modules/merge_annotation.nf'
-include { MERGE_FASTQ }                                                                         from './modules/merge_fastq.nf'
+include { MERGE_FASTQ_RESTRANDER; MERGE_FASTQ_EOULSAN }                                         from './modules/merge_fastq.nf'
 include { RESTRANDER }                                                                          from './modules/restrander.nf'
 include { RNA_BLOOM }                                                                           from './modules/rnabloom.nf'
 include { RNABLOOM_MINIMAP2 }                                                                   from './modules/rnabloom_minimap2.nf'
-//include { RNABLOOM_RENAME }                                                                     from './modules/rnabloom_rename.nf'
 include { RNABLOOM_PAFTOOLS }                                                                   from './modules/rnabloom_paftools.nf'
 include { RNABLOOM_AGAT_BED2GFF; RNABLOOM_AGAT_GFF2GTF; AGAT_COMPLEMENT; MERGE_AGAT_GFF2GTF }   from './modules/agat.nf'
 include { SAMPLESHEET2YAML }                                                                    from './modules/samplesheet2yaml.nf'
@@ -57,6 +56,7 @@ reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
 shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
 junc_bed_ch = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
 samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
+sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
 params.eoulsan_genome = "genome://hg19ens105"
 params.eoulsan_annotation = "gtf://hg19ens105"
@@ -79,67 +79,88 @@ params.expressionConf = [ "genomic.type" : "exon", "attribute.id" : "gene_id", "
 
 workflow{
    if (params.oriented == false) {
-      RESTRANDER(reads_ch, config_ch)
+      //RESTRANDER(reads_ch, config_ch)
 
       // Transcript annotation modules: Isoquant
-      MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed_ch)
-      SAMTOOLS(MINIMAP2.out.isoquant_sam)
+      //MINIMAP2(genome_ch, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed_ch)
+      //SAMTOOLS(MINIMAP2.out.isoquant_sam)
       //SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect()) LEAVE OUT
-      SAMPLESHEET2YAML(samplesheet_ch)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      //SAMPLESHEET2YAML(samplesheet_ch)
+      //ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       //ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy) LEAVE OUT
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ(samplesheet_ch, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
-      RNA_BLOOM(MERGE_FASTQ.out.merged_fastq.flatten(), shortread_ch)
+      //MERGE_FASTQ_RESTRANDER(samplesheet_ch, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
+      //RNA_BLOOM(MERGE_FASTQ_RESTRANDER.out.merged_fastq.flatten(), shortread_ch)
       //RNABLOOM_RENAME(RNA_BLOOM.out.rnabloom_fasta) LEAVE OUT
-      RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
+      //RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
       //RNABLOOM_MINIMAP2(genome_ch,rnabloom_fasta_ch) LEAVE OUT
-      RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
-      RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
-      RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
+      //RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
+      //RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
+      //RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
-      AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
+      //AGAT_COMPLEMENT(ISOQUANT.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
+      //AGAT_COMPLEMENT(isoquant_gtf_ch.join(agat_gtf_ch))
       //AGAT_COMPLEMENT(merged_gtf_ch) LEAVE OUT
-      GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
-      MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
-      MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+      //GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
+      //MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
+      //MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
    } else if (params.oriented == true) {
       // Index creation
-      index_ch = EOULSAN_INDEX(genome_ch, params.mapperName, params.mapperVersion, params.mapperFlavor, params.storages, params.tmpDir, params.binaryDir, params.indexerArguments)
-      genome_ch = create_channel_from_path(params.eoulsan_genome, params.storages)
-      uncompress_ch = UNCOMPRESS(genome_ch)
+      //index_ch = EOULSAN_INDEX(genome_ch, params.mapperName, params.mapperVersion, params.mapperFlavor, params.storages, params.tmpDir, params.binaryDir, params.indexerArguments)
+      //genome_ch = create_channel_from_path(params.eoulsan_genome, params.storages)
+      //uncompress_ch = UNCOMPRESS(genome_ch)
 
       // Reads filtering
-      filterreads_ch = EOULSAN_READ_FILTER_SR(reads_ch, params.readFilteringConf)
+      //filterreads_ch = EOULSAN_READ_FILTER_SR(reads_ch, params.readFilteringConf)
 
       // Mapping
-      filterreads_ch.combine(index_ch).set { reads_index_combined_ch }
-      mapping_ch = EOULSAN_MAPPING(reads_index_combined_ch, params.mapperName, params.mapperVersion, params.mapperFlavor, params.tmpDir, params.binaryDir, params.mappersArguments)
+      //filterreads_ch.combine(index_ch).set { reads_index_combined_ch }
+      //mapping_ch = EOULSAN_MAPPING(reads_index_combined_ch, params.mapperName, params.mapperVersion, params.mapperFlavor, params.tmpDir, params.binaryDir, params.mappersArguments)
 
       // Alignments filtering
-      filtersam_ch = EOULSAN_SAM_FILTER(mapping_ch, params.samFilteringConf, params.tmpDir)
+      //filtersam_ch = EOULSAN_SAM_FILTER(mapping_ch, params.samFilteringConf, params.tmpDir)
 
       // Expression computation
-      filtersam_ch.combine(annot_ch).combine(genome_ch).set { filtersam_annot_combined_ch }
-      expression_ch = EOULSAN_EXPRESSION(filtersam_annot_combined_ch, params.expressionConf, "True", params.storages)
+      //filtersam_ch.combine(annot_ch).combine(genome_ch).set { filtersam_annot_combined_ch }
+      //expression_ch = EOULSAN_EXPRESSION(filtersam_annot_combined_ch, params.expressionConf, "True", params.storages)
 
       // Launch transcript annotation modules: Isoquant + RNABloom
-      SAMTOOLS(EOULSAN_SAM_FILTER.out.filtered_sam)
-      SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
-      ISOQUANT(uncompress_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
+      //SAMTOOLS(EOULSAN_SAM_FILTER.out.filtered_sam)
+      //SAMTOOLS_MERGE(SAMTOOLS.out.samtools_bam.collect())
+      //ISOQUANT(genome_ch, SAMTOOLS_MERGE.out.samtools_mergedbam, params.model_strategy)
             
-      MERGE_FASTQ(EOULSAN_READ_FILTER_SR.out.eoulsan_fasta.collect())
+      //MERGE_FASTQ(EOULSAN_READ_FILTER_SR.out.eoulsan_fasta.collect())
 
-      RNA_BLOOM(EOULSAN_READ_FILTER_SR.out.eoulsan_fasta, shortread_ch)
-      RNABLOOM_MINIMAP2(uncompress_ch, RNA_BLOOM.out.rnabloom_fasta)
+      //RNA_BLOOM(EOULSAN_READ_FILTER_SR.out.eoulsan_fasta, shortread_ch)
+      //RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
+      //RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
+      //RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
+      //RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
+
+      // Merging of transcript annotations
+      //AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)
+      //GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
+      //MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
+      //MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+
+      // Transcript annotation modules: Isoquant
+      SAMTOOLS(sam_ch)
+      SAMPLESHEET2YAML(samplesheet_ch)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_ch, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
+
+      // Transcript annotation modules: RNABloom
+      MERGE_FASTQ_EOULSAN(samplesheet_ch)
+      RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread_ch)
+      RNABLOOM_MINIMAP2(genome_ch, RNA_BLOOM.out.rnabloom_fasta)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
-      AGAT_COMPLEMENT(ISOQUANT.out.isoquant_gtf, RNABLOOM_AGAT_GFF2GTF.out.agat_gtf)
+      AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
       GFFREAD(genome_ch, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
       MERGE_ANNOTATION(annot_ch, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)

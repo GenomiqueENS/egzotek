@@ -28,10 +28,10 @@ process ISOQUANT {
    val model_strategy
 
    output:
-   path( "isoquant/*/*.gtf" ), emit: isoquant_gtf
+   path( "isoquant/*/*_isoquant.gtf" ), emit: isoquant_gtf
    path( "isoquant/*/*" ), emit: isoquant_counts
    
-   script:   
+   script:
    """
    isoquant.py --reference ${genome}               \
    --yaml ${samplesheet}                           \
@@ -43,6 +43,26 @@ process ISOQUANT {
    -o isoquant \
    && for file in isoquant/*/*.transcript_models.gtf; do cp "\$file" "\${file%.transcript_models.gtf}_isoquant.gtf"; done
    """
-}  
+}
 
+process ISOQUANT_CONDITION {
 
+   // where to store the results and in which way
+   cpus 24
+   publishDir( params.OUTPUT, mode: 'copy' )
+
+   // show in the log which input file is analysed
+   debug true
+   tag( "${isoquant_gtf}" )
+
+   input:
+   path isoquant_gtf 
+
+   output:
+   tuple val(condition), path( "${isoquant_gtf}" ), emit: isoquant_condition_gtf
+   
+   script:
+   condition= isoquant_gtf.SimpleName.split('_')[0]
+   """
+   """
+}
