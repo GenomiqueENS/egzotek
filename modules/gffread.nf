@@ -21,7 +21,7 @@ process GFFREAD {
     
     input:
     path genome
-    tuple val(condition),path(polished_gtf)
+    tuple val(condition), path(polished_gtf)
     
     output:
     tuple val(condition), path("${condition}.transcripts_polished_clustersMKZ.gff3"), emit: gffread_gff3

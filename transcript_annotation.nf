@@ -50,7 +50,7 @@ include { SAMTOOLS_MERGE }                                                      
 ======================================================================================== 
 */
 genome_ch = file( params.genome )
-annot_ch = Channel.of( params.annotation )
+annot_ch = file( params.annotation )
 config_ch = file( params.config, checkIfExists:true )
 reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
 shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")

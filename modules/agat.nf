@@ -93,10 +93,10 @@ process AGAT_COMPLEMENT {
    publishDir( "result/consensus", mode: 'copy' )
 
    // show in the log which input file is analysed
-   tag( "${isoquant_gtf}, ${agat_gtf}" )
+   tag( "${isoquant_gtf}, ${rnabloom_gtf}" )
    
    input:
-   tuple val(condition), path(isoquant_gtf), path(agat_gtf)
+   tuple val(condition), path(isoquant_gtf), path(rnabloom_gtf)
    
    output:
    tuple val(condition), path("${condition}.polished_transcriptome.gtf"), emit: polished_gtf
@@ -105,7 +105,7 @@ process AGAT_COMPLEMENT {
    """
    /usr/local/bin/agat_sp_complement_annotations.pl \
    --ref ${isoquant_gtf} \
-   --add ${agat_gtf} \
+   --add ${rnabloom_gtf} \
    --out ${condition}.polished_transcriptome.gtf
    """
 }
