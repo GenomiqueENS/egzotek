@@ -5,7 +5,7 @@
 */
 
 // Parameter definitions
-params.OUTPUT = "result/restrander"
+params.OUTPUT = "${params.outdir}/restrander"
 
 /*
 * Create Isoquant trancript model

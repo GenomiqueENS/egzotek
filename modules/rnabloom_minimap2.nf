@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/rnabloom"
-
 /*
 * Transcript genome alignment
 */
@@ -16,7 +13,7 @@ process RNABLOOM_MINIMAP2 {
    debug true
    maxForks 1
    cpus 24
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${bloomfasta}" )

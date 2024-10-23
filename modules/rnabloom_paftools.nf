@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/rnabloom"
-
 /*
 * Pathtools Conversion sam > bed
 */
@@ -14,7 +11,7 @@ params.OUTPUT = "result/rnabloom"
 process RNABLOOM_PAFTOOLS {
    // where to store the results and in which way
    debug true
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${bloomsam}" )

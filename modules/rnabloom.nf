@@ -3,7 +3,6 @@
    RNABLOOM module
 ========================================================================================
 */
-params.OUTPUT = "result/rnabloom"
 
 /*
 * RNA Bloom Transcript Model
@@ -11,8 +10,8 @@ params.OUTPUT = "result/rnabloom"
 process RNA_BLOOM {
    // where to store the results and in which way
    debug true
-   cpus 24
-   publishDir (params.OUTPUT, mode: 'copy')
+   cpus 16
+   publishDir ("${params.outdir}/rnabloom", mode: 'copy')
 
    // show in the log which input file is analysed
    tag( "RNA-Bloom ${longread}" )

@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/consensus"
-
 /*
 * Merge  Isoquant and RNABloom trancript models
 */
@@ -14,7 +11,7 @@ params.OUTPUT = "result/consensus"
 process MERGE_ANNOTATION {
 
    // where to store the results and in which way
-    publishDir( params.OUTPUT, mode: 'copy' )
+    publishDir( "${params.outdir}/consensus", mode: 'copy' )
 
     // show in the log which input file is analysed
     debug true

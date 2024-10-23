@@ -11,7 +11,7 @@
 process RNABLOOM_AGAT_BED2GFF {
    // where to store the results and in which way
    debug true
-   publishDir( "result/rnabloom", mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${bloombed}" )
@@ -37,7 +37,7 @@ process RNABLOOM_AGAT_BED2GFF {
 process RNABLOOM_AGAT_GFF2GTF {
    // where to store the results and in which way
    debug true
-   publishDir( "result/rnabloom", mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${agat_gtf}" )
@@ -63,7 +63,7 @@ process RNABLOOM_AGAT_GFF2GTF {
 process MERGE_AGAT_GFF2GTF {
    // where to store the results and in which way
    debug true
-   publishDir( "result/consensus", mode: 'copy' )
+   publishDir( "${params.outdir}/consensus", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${merged_gff}" )
@@ -90,7 +90,7 @@ process MERGE_AGAT_GFF2GTF {
 process AGAT_COMPLEMENT {
    // where to store the results and in which way
    debug true
-   publishDir( "result/consensus", mode: 'copy' )
+   publishDir( "${params.outdir}/consensus", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${isoquant_gtf}, ${rnabloom_gtf}" )
