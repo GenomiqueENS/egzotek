@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/"
-
 /*
 * Create Isoquant trancript model
 */
@@ -15,7 +12,7 @@ process ISOQUANT {
 
    // where to store the results and in which way
    cpus 24
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}", mode: 'copy' )
 
    // show in the log which input file is analysed
    debug true
@@ -46,10 +43,6 @@ process ISOQUANT {
 }
 
 process ISOQUANT_CONDITION {
-
-   // where to store the results and in which way
-   cpus 24
-   publishDir( params.OUTPUT, mode: 'copy' )
 
    // show in the log which input file is analysed
    debug true
