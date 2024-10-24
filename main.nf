@@ -13,8 +13,11 @@ nextflow.enable.dsl=2
 println """\
       T R A N S C R I P T - A N N O T A T I O N - N F   P I P E L I N E
       ===================================
-      genome      : ${params.genome}
+      orientation : ${params.oriented}
       fastq       : ${params.reads}
+      sam         : ${params.sam}
+      genome      : ${params.genome}
+      annotation  : ${params.annotation}
       outdir      : ${params.outdir}
       """
       .stripIndent()
@@ -40,9 +43,9 @@ workflow{
    shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
    junc_bed_ch = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
    samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
-   
+   reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
+
    if (params.oriented == false) {
-      reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
       
       NONORIENTED_WORKFLOW(genome_ch,
                         annot_ch,
@@ -60,7 +63,8 @@ workflow{
                         shortread_ch,
                         junc_bed_ch,
                         samplesheet_ch,
-                        sam_ch)
+                        sam_ch,
+                        reads_ch)
    }
 }
 
