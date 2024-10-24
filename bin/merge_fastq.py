@@ -4,7 +4,7 @@ import gzip
 import shutil
 import argparse
 
-def merge_fastq_by_condition(samplesheet_path, fastq_dir):
+def merge_fastq_by_condition(samplesheet_path):
     # Supported extensions
     file_extensions = ['.fastq.gz', '.fastq', '.fq.gz', '.fq', '.fasta', '.fasta.gz']
 
@@ -30,7 +30,7 @@ def merge_fastq_by_condition(samplesheet_path, fastq_dir):
 
                 # Try finding the fastq file with any of the supported extensions
                 for ext in file_extensions:
-                    fastq_path = os.path.join(fastq_dir, f"{fastq}{ext}")
+                    fastq_path = os.path.join(os.getcwd(), f"{fastq}{ext}")
                     if os.path.exists(fastq_path):
                         found_file = fastq_path
                         break
@@ -53,9 +53,8 @@ if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Merge fastq files by condition.")
     parser.add_argument('samplesheet', type=str, help="Path to the samplesheet CSV file")
-    parser.add_argument('fastq_dir', type=str, help="Directory containing fastq and sequence files")
 
     args = parser.parse_args()
 
     # Run the merge function with command-line arguments
-    merge_fastq_by_condition(args.samplesheet, args.fastq_dir)
+    merge_fastq_by_condition(args.samplesheet)

@@ -2,8 +2,6 @@
 ========================================================================================
    MERGE_FASTQ module
 ========================================================================================
-*/
-params.OUTPUT = "result/rnabloom"
 
 /*
 * Merge Fast
@@ -11,11 +9,11 @@ params.OUTPUT = "result/rnabloom"
 process MERGE_FASTQ_RESTRANDER {
    // where to store the results and in which way
    debug true
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    input:
    path samplesheet
-   val restrander_dir
+   path reads
    val ready
 
    output:
@@ -23,24 +21,24 @@ process MERGE_FASTQ_RESTRANDER {
    
    script:
    """
-   python3 $projectDir/bin/merge_fastq.py ${samplesheet} $projectDir/${restrander_dir}/
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet}
    """
 }
 
 process MERGE_FASTQ_EOULSAN {
    // where to store the results and in which way
    debug true
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    input:
    path samplesheet
+   path reads
 
    output:
    path( "*.fastq" ), emit: merged_fastq
    
    script:
-   def base_path = params.reads.substring(0, params.reads.lastIndexOf('/'))  
    """
-   python3 $projectDir/bin/merge_fastq.py ${samplesheet} ${base_path}
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet}
    """
 }
