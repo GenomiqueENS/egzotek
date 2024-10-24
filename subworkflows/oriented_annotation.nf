@@ -15,6 +15,7 @@ include { RNABLOOM_PAFTOOLS }                                                   
 include { RNABLOOM_AGAT_BED2GFF; RNABLOOM_AGAT_GFF2GTF; AGAT_COMPLEMENT; MERGE_AGAT_GFF2GTF }   from '../modules/agat.nf'
 include { SAMPLESHEET2YAML }                                                                    from '../modules/samplesheet2yaml.nf'
 include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
+include { UNCOMPRESS_GENOME; UNCOMPRESS_ANNOTATION }                                            from '../modules/uncompress_files.nf'
 
 workflow ORIENTED_WORKFLOW {
    take:
@@ -25,15 +26,17 @@ workflow ORIENTED_WORKFLOW {
       junc_bed
       samplesheet
       sam
+      reads
       
    main:
       SAMTOOLS(sam)
       SAMPLESHEET2YAML(samplesheet)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      UNCOMPRESS_GENOME(genome)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ_EOULSAN(samplesheet)
+      MERGE_FASTQ_EOULSAN(samplesheet, reads)
       RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread)
       RNABLOOM_MINIMAP2(genome, RNA_BLOOM.out.rnabloom_fasta)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
@@ -42,7 +45,7 @@ workflow ORIENTED_WORKFLOW {
 
       // Merging of transcript annotations
       AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
-      GFFREAD(genome, AGAT_COMPLEMENT.out.polished_gtf)
+      GFFREAD(UNCOMPRESS_GENOME.out.genome_gffread, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
       MERGE_ANNOTATION(annot, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
 }

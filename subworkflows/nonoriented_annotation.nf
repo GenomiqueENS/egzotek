@@ -37,7 +37,7 @@ workflow NONORIENTED_WORKFLOW {
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ_RESTRANDER(samplesheet, RESTRANDER.out.restrander_output_dir.first(), RESTRANDER.out.process_control.collect())
+      MERGE_FASTQ_RESTRANDER(samplesheet, reads, RESTRANDER.out.process_control.collect())
       RNA_BLOOM(MERGE_FASTQ_RESTRANDER.out.merged_fastq.flatten(), shortread)
       RNABLOOM_MINIMAP2(genome, RNA_BLOOM.out.rnabloom_fasta)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
