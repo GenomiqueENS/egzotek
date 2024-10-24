@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/isoquant"
-
 /*
 * Convert samplesheet into YAML for IsoQuant
 */
@@ -14,7 +11,7 @@ params.OUTPUT = "result/isoquant"
 process SAMPLESHEET2YAML {
 
    // where to store the results and in which way
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/isoquant", mode: 'copy' )
 
    // show in the log which input file is analysed
    debug true
@@ -28,6 +25,6 @@ process SAMPLESHEET2YAML {
    
    script:
    """
-   python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml --path $projectDir/result/isoquant
+   python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml --path ${params.outdir}/bam
    """
 }  
