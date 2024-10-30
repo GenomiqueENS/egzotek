@@ -11,6 +11,9 @@ process RNA_BLOOM {
    // where to store the results and in which way
    debug true
    cpus 24
+   maxForks 1
+   maxRetries 2
+   
    publishDir ("${params.outdir}/rnabloom", mode: 'copy')
 
    // show in the log which input file is analysed
