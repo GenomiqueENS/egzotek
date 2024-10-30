@@ -73,52 +73,7 @@ Configuration for running the workflow:
 | `threads`         | Number of threads to use           | `4`                       |
 | `docker.runOptions` | Docker run options to use        | `'-u $(id -u):$(id -g)'`  |
 
-## Usage
-User can User can choose among 4 ways to simulate template reads.
-- use a real count matrix
-- estimated the parameter from a real count matrix to simulate synthetic count matrix 
-- specified by his/her own the input parameter
-- a combination of the above options
 
-### EXAMPLES 
-##### Sample data
-A demonstration dataset to initiate this workflow is accessible on zenodo DOI : [10.5281/zenodo.12731408](https://zenodo.org/records/12731409). This dataset is a subsample from a Nanopore run of the [10X 5k human pbmcs](https://www.10xgenomics.com/datasets/5k-human-pbmcs-3-v3-1-chromium-controller-3-1-standard).
-
-The human GRCh38 [reference transcriptome](https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/cdna/), [gtf annotation](https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/) and [fasta referance genome](https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/dna/) can be downloaded from Ensembl.
-
-
-##### WITH ONLY NANOPORE NON-ORIENTED READS
-
-```bash
- nextflow run main.nf --matrix dataset/sub_pbmc_matrice.csv \
-                      --transcriptome dataset/Homo_sapiens.GRCh38.cdna.all.fa \
-                      --features gene_name \
-                      --gtf dataset/genes.gtf
-```
-
-##### WITH NANOPORE ORIENTED READS
-
-```bash
- nextflow run main.nf --matrix dataset/sub_pbmc_matrice.csv \
-                      --transcriptome dataset/Homo_sapiens.GRCh38.cdna.all.fa \
-                      --features gene_name \
-                      --gtf dataset/GRCh38-2020-A-genes.gtf \
-                      --pcr_cycles 2 \
-                      --pcr_dup_rate 0.7 \
-                      --pcr_error_rate 0.00003
-```
-
-##### WITH NANOPORE AND ILLUMINA READS
-
-```bash
- nextflow run main.nf --matrix dataset/sub_pbmc_matrice.csv \
-                      --transcriptome dataset/Homo_sapiens.GRCh38.cdna.all.fa \
-                      --features gene_name \
-                      --gtf dataset/GRCh38-2020-A-genes.gtf \
-                      --pcr_cycles 2 \
-                      --pcr_dup_rate 0.7 \
-                      --pcr_error_rate 0.00003
-```
 ## Results
 
 After execution, results will be available in the specified `--outdir`. This includes SAM and BAM files produced for IsoQuant and RNABloom and gtf with annotated transcriptomes.
