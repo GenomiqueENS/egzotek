@@ -8,8 +8,11 @@ process UNCOMPRESS_GENOME {
    debug true
    publishDir( "${params.outdir}/ressources", mode: 'copy' )
 
+   tag( "${genome}" )
+
    input:
    path genome
+
    output:
    path( "*" ), emit: genome_isoquant
    path( "*" ), emit: genome_gffread
