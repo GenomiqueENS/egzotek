@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/isoquant"
-
 /*
 * Convert SAM files to BAM files
 */
@@ -14,7 +11,7 @@ params.OUTPUT = "result/isoquant"
 process SAMTOOLS {
 
    // where to store the results and in which way
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/bam", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${sam}" )
@@ -23,8 +20,9 @@ process SAMTOOLS {
    path(sam)
 
    output:
-   path("*.bam"), emit: samtools_bam
-   path("*.bam.bai")
+   path("${sam.SimpleName}.bam"), emit: samtools_bam
+   path("${sam.SimpleName}.bam.bai")
+   val("process_complete"), emit: process_control
       
    script:
    """

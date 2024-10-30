@@ -4,9 +4,6 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "result/rnabloom"
-
 /*
 * Pathtools Conversion sam > bed
 */
@@ -14,20 +11,20 @@ params.OUTPUT = "result/rnabloom"
 process RNABLOOM_PAFTOOLS {
    // where to store the results and in which way
    debug true
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed
    tag( "${bloomsam}" )
    
    input:
-   path bloomsam 
+   tuple val(condition), path(bloomsam)
    
    output:
-   path( "rnabloom_aln.bed" ), emit: rnabloom_bed
+   tuple val(condition), path( "${bloomsam.SimpleName}.bed" ), emit: rnabloom_bed
    
    script:
    """
-   paftools.js splice2bed ${bloomsam} > rnabloom_aln.bed
+   paftools.js splice2bed ${bloomsam} > ${bloomsam.SimpleName}.bed
    """
 
 }

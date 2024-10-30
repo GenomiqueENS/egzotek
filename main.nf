@@ -1,0 +1,137 @@
+/*
+========================================================================================
+   Transcript Annotation Nextflow Workflow
+========================================================================================
+   Github   :
+   Contact  :
+----------------------------------------------------------------------------------------
+*/
+
+nextflow.enable.dsl=2
+if ( params.help ) {
+   help = """
+   Usage:
+      nextflow run main.nf --reads <path> --samplesheet <path> [options]
+
+   Description:
+      EGZOTEK - TRANSCRIPTOME ANNOTATION PIPELINE USING NANOPORE READS
+      Builds transcriptome annotations from nanopore data
+
+      Required parameters:
+            --reads <path>                   Path to fastq nanopore reads.
+            --samplesheet <path>	            Path to the samplesheet file
+            --genome <path>	               Path to the genome file
+            --annotation <path>          	   Path to the reference transcriptome file
+            --orientation <value>            Orientation of reads based on library protocol
+            --sam <path>                     Path to sam files after eoulsan (required if oriented=true)
+            --config <path> 	               Path to Restrander configuration file (required if oriented=false)
+
+      Optional arguments:
+            --intron_length <value>	         Parameter for maximum intron length for Minimap2
+            --junc_bed <path>	               Parameter for junction bed annotation for Minimap2
+            --model_strategy <value>	      Parameter for transcript model construction algorithm
+            --optional_shortread <path>	   Path to Illumina reads for short-read polishing in RNA-Bloom
+
+            -w       The NextFlow work directory. Delete the directory once the process
+                     is finished [default: ${workDir}]""".stripMargin()
+    // Print the help with the stripped margin and exit
+   println(help)
+   exit(0)
+}
+
+// Display pipeline details
+println """\
+      T R A N S C R I P T - A N N O T A T I O N - N F   P I P E L I N E
+      ===================================
+      orientation : ${params.oriented}
+      fastq       : ${params.reads}
+      sam         : ${params.sam}
+      genome      : ${params.genome}
+      annotation  : ${params.annotation}
+      outdir      : ${params.outdir}
+      """
+      .stripIndent()
+
+/*
+========================================================================================
+   Pipeline Subworklows
+========================================================================================
+*/
+include { ORIENTED_WORKFLOW          } from './subworkflows/oriented_annotation'
+include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotation'
+
+/*
+========================================================================================
+   WORKFLOW - Transcript Annotation
+========================================================================================
+*/
+
+workflow{
+   genome_ch = file( params.genome )
+   annot_ch = file( params.annotation )
+   config_ch = file( params.config, checkIfExists:true )
+   shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
+   junc_bed_ch = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
+   samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
+   reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
+
+   if (params.oriented == false) {
+      
+      NONORIENTED_WORKFLOW(genome_ch,
+                        annot_ch,
+                        config_ch,
+                        shortread_ch,
+                        junc_bed_ch,
+                        samplesheet_ch,
+                        reads_ch)
+   } else if (params.oriented == true) {
+      sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
+
+      ORIENTED_WORKFLOW(genome_ch,
+                        annot_ch,
+                        config_ch,
+                        shortread_ch,
+                        junc_bed_ch,
+                        samplesheet_ch,
+                        sam_ch,
+                        reads_ch)
+   }
+}
+
+// Display pipeline execution summary upon completion
+workflow.onComplete {
+   println (workflow.success ? """
+      Pipeline execution summary
+      ---------------------------
+      Completed at: ${workflow.complete}
+      Duration    : ${workflow.duration}
+      Success     : ${workflow.success}
+      workDir     : ${workflow.workDir}
+      exit status : ${workflow.exitStatus}
+      """ : """
+      Failed      : ${workflow.errorReport}
+      exit status : ${workflow.exitStatus}
+      """
+   )
+}
+
+log.info """\
+   EGZOTEK - TRANSCRIPTOME ANNOTATION PIPELINE USING NANOPORE READS
+   ===================================
+   nanopore reads                        : ${params.reads}
+   samplesheet                           : ${params.samplesheet}
+   genome                                : ${params.genome}
+   annotation                            : ${params.annotation}
+   orientation                           : ${params.oriented}
+   eoulsan sam files                     : ${params.sam}
+   restrander config file                : ${params.config}
+   intron length minimap2                : ${params.intron_length}
+   junction bed files minimap2           : ${params.junc_bed}
+   IsoQuant model strategy               : ${params.model_strategy}
+   RNABloom short read polishing data    : ${params.optional_shortread}
+   outdir                                : ${params.outdir}
+   """
+   .stripIndent()
+
+/*
+========================================================================================

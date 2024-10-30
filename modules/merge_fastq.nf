@@ -2,28 +2,43 @@
 ========================================================================================
    MERGE_FASTQ module
 ========================================================================================
-*/
-params.OUTPUT = "result/rnabloom"
 
 /*
 * Merge Fast
 */
-process MERGE_FASTQ {
+process MERGE_FASTQ_RESTRANDER {
    // where to store the results and in which way
    debug true
-   publishDir( params.OUTPUT, mode: 'copy' )
-
-   // show in the log which input file is analysed
-   tag( "Merge fastq ${filtered_fastq}" )
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    input:
-   path filtered_fastq 
+   path samplesheet
+   path reads
+   val ready
 
    output:
-   path( "merged_filtered.fastq" ), emit: merged_fastq
+   path( "*.fastq" ), emit: merged_fastq
    
    script:
    """
-   cat ${filtered_fastq} >> merged_filtered.fastq
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet}
    """
-}  
+}
+
+process MERGE_FASTQ_EOULSAN {
+   // where to store the results and in which way
+   debug true
+   publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
+
+   input:
+   path samplesheet
+   path reads
+
+   output:
+   path( "*.fastq" ), emit: merged_fastq
+   
+   script:
+   """
+   python3 $projectDir/bin/merge_fastq.py ${samplesheet}
+   """
+}
