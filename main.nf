@@ -8,7 +8,9 @@
 */
 
 nextflow.enable.dsl=2
-if ( params.help ) {
+params.help = false
+
+if ( params.help) {
    help = """
    Usage:
       nextflow run main.nf --reads <path> --samplesheet <path> [options]
@@ -39,18 +41,6 @@ if ( params.help ) {
    exit(0)
 }
 
-// Display pipeline details
-println """\
-      T R A N S C R I P T - A N N O T A T I O N - N F   P I P E L I N E
-      ===================================
-      orientation : ${params.oriented}
-      fastq       : ${params.reads}
-      sam         : ${params.sam}
-      genome      : ${params.genome}
-      annotation  : ${params.annotation}
-      outdir      : ${params.outdir}
-      """
-      .stripIndent()
 
 /*
 ========================================================================================
@@ -135,3 +125,4 @@ log.info """\
 
 /*
 ========================================================================================
+*/
