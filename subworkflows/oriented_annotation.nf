@@ -32,7 +32,7 @@ workflow ORIENTED_WORKFLOW {
       SAMTOOLS(sam)
       SAMPLESHEET2YAML(samplesheet)
       UNCOMPRESS_GENOME(genome)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam, UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
