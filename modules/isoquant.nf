@@ -12,6 +12,8 @@ process ISOQUANT {
 
    // where to store the results and in which way
    cpus 24
+   maxForks 1
+   
    publishDir( "${params.outdir}", mode: 'copy' )
 
    // show in the log which input file is analysed
@@ -20,6 +22,7 @@ process ISOQUANT {
 
    input:
    val ready
+   path bams
    path genome 
    path samplesheet
    val model_strategy

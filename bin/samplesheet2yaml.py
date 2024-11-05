@@ -3,7 +3,7 @@ import argparse
 import sys
 
 # Function to convert CSV to the exact YAML structure
-def csv_to_exact_yaml(csv_file, yaml_file, path_prefix=None):
+def csv_to_exact_yaml(csv_file, yaml_file):
     data = {}
 
     # Reading the CSV file and grouping data by 'condition'
@@ -14,8 +14,8 @@ def csv_to_exact_yaml(csv_file, yaml_file, path_prefix=None):
             if condition not in data:
                 data[condition] = {"long read files": [], "labels": []}
 
-            # Append the full path if path_prefix is provided
-            bam_file = f"{path_prefix}/{row['fastq']}.bam" if path_prefix else row['fastq']
+            # Append .bam to the filename
+            bam_file = f"{row['fastq']}.bam"
             label = f"Sample{row['sample']}"
             
             data[condition]["long read files"].append(bam_file)
@@ -48,14 +48,13 @@ def csv_to_exact_yaml(csv_file, yaml_file, path_prefix=None):
 # Main function to handle command-line arguments
 if __name__ == "__main__":
     # Argument parsing
-    parser = argparse.ArgumentParser(description="Convert CSV to YAML and update bam file paths")
+    parser = argparse.ArgumentParser(description="Convert CSV to YAML and append .bam to file names")
     parser.add_argument('--input', required=True, help="Input CSV file")
     parser.add_argument('--output', required=True, help="Output YAML file")
-    parser.add_argument('--path', help="Optional path to prepend to 'bam' column values")
 
     args = parser.parse_args()
 
-    # Convert the CSV to the YAML structure, appending the full path to 'bam' if provided
-    csv_to_exact_yaml(args.input, args.output, args.path)
+    # Convert the CSV to the YAML structure
+    csv_to_exact_yaml(args.input, args.output)
     
     print(f"YAML file has been created: {args.output}")
