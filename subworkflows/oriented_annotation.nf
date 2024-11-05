@@ -32,11 +32,11 @@ workflow ORIENTED_WORKFLOW {
       SAMTOOLS(sam)
       SAMPLESHEET2YAML(samplesheet)
       UNCOMPRESS_GENOME(genome)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam, UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ_EOULSAN(samplesheet, reads)
+      MERGE_FASTQ_EOULSAN(samplesheet, reads.collect())
       RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread)
       RNABLOOM_MINIMAP2(genome, RNA_BLOOM.out.rnabloom_fasta)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
