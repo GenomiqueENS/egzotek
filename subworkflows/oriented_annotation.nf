@@ -15,7 +15,7 @@ include { RNABLOOM_PAFTOOLS }                                                   
 include { RNABLOOM_AGAT_BED2GFF; RNABLOOM_AGAT_GFF2GTF; AGAT_COMPLEMENT; MERGE_AGAT_GFF2GTF }   from '../modules/agat.nf'
 include { SAMPLESHEET2YAML }                                                                    from '../modules/samplesheet2yaml.nf'
 include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
-include { UNCOMPRESS_GENOME; UNCOMPRESS_ANNOTATION }                                            from '../modules/uncompress_files.nf'
+include { UNCOMPRESS_GENOME }                                                                   from '../modules/uncompress_files.nf'
 
 workflow ORIENTED_WORKFLOW {
    take:
@@ -29,10 +29,22 @@ workflow ORIENTED_WORKFLOW {
       reads
       
    main:
+      // Check if genome is zipped
+      ch_isoquant_genome = Channel.empty()
+      ch_gffread_genome = Channel.empty()
+      if (genome.endsWith('.gz')|| genome.endsWith(".bz2")){
+            UNCOMPRESS_GENOME( [ [:], genome ])
+            ch_isoquant_genome = UNCOMPRESS_GENOME.out.genome_isoquant
+            ch_gffread_genome = UNCOMPRESS_GENOME.out.genome_gffread
+      } else {
+            ch_isoquant_genome = [ [:], genome ]
+            ch_gffread_genome= [ [:], genome ]
+      }
+
+      // Transcript annotation modules: IsoQuant
       SAMTOOLS(sam)
       SAMPLESHEET2YAML(samplesheet)
-      UNCOMPRESS_GENOME(genome)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), UNCOMPRESS_GENOME.out.genome_isoquant, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
@@ -45,7 +57,7 @@ workflow ORIENTED_WORKFLOW {
 
       // Merging of transcript annotations
       AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
-      GFFREAD(UNCOMPRESS_GENOME.out.genome_gffread, AGAT_COMPLEMENT.out.polished_gtf)
+      GFFREAD(ch_gffread_genome, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
       MERGE_ANNOTATION(annot, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
 }
