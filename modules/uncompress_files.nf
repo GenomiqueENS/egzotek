@@ -15,6 +15,7 @@ process UNCOMPRESS_GENOME {
 
    output:
    path( "${genome.BaseName}" ), emit: genome_isoquant
+   path( "${genome.BaseName}" ), emit: genome_minimap2
    path( "${genome.BaseName}" ), emit: genome_gffread
    
    script:

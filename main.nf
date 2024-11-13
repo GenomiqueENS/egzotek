@@ -57,7 +57,6 @@ include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotati
 */
 
 workflow{
-   genome_ch = file( params.genome )
    annot_ch = file( params.annotation )
    config_ch = file( params.config, checkIfExists:true )
    shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
@@ -67,8 +66,7 @@ workflow{
 
    if (params.oriented == false) {
       
-      NONORIENTED_WORKFLOW(genome_ch,
-                        annot_ch,
+      NONORIENTED_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
@@ -77,8 +75,7 @@ workflow{
    } else if (params.oriented == true) {
       sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      ORIENTED_WORKFLOW(genome_ch,
-                        annot_ch,
+      ORIENTED_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
@@ -119,6 +116,7 @@ log.info """\
    junction bed files minimap2           : ${params.junc_bed}
    IsoQuant model strategy               : ${params.model_strategy}
    RNABloom short read polishing data    : ${params.optional_shortread}
+   gffread parameters                    : ${params.gffread_parameters}
    outdir                                : ${params.outdir}
    """
    .stripIndent()
