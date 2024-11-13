@@ -19,6 +19,7 @@ process GFFREAD {
     input:
     path genome
     tuple val(condition), path(polished_gtf)
+    val gffread_parameters
     
     output:
     tuple val(condition), path("${condition}.transcripts_polished_clustersMKZ.gff3"), emit: gffread_gff3
@@ -27,6 +28,6 @@ process GFFREAD {
     """
     gffread  -g ${genome} \
     -o ${condition}.transcripts_polished_clustersMKZ.gff3 \
-    -M -K -Z ${polished_gtf} \
+    ${gffread_parameters} ${polished_gtf} 
     """
 }
