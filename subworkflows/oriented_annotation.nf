@@ -51,7 +51,7 @@ workflow ORIENTED_WORKFLOW {
       // Transcript annotation modules: RNABloom
       MERGE_FASTQ_EOULSAN(samplesheet, reads.collect())
       RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread)
-      RNABLOOM_MINIMAP2(ch_minimap2_genome, RNA_BLOOM.out.rnabloom_fasta)
+      RNABLOOM_MINIMAP2(ch_minimap2_genome, RNA_BLOOM.out.rnabloom_fasta, params.intron_length, junc_bed)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
