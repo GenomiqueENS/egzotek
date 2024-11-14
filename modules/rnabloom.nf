@@ -10,7 +10,7 @@
 process RNA_BLOOM {
    // where to store the results and in which way
    debug true
-   cpus 24
+   cpus 16
    maxForks 1
    maxRetries 2
    

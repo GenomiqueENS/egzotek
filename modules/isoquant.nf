@@ -11,7 +11,7 @@
 process ISOQUANT {
 
    // where to store the results and in which way
-   cpus 24
+   cpus 16
    maxForks 1
    
    publishDir( "${params.outdir}", mode: 'copy' )
