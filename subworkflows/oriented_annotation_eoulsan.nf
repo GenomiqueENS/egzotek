@@ -6,7 +6,6 @@
 
 include { GFFREAD }                                                                             from '../modules/gffread.nf' 
 include { ISOQUANT; ISOQUANT_CONDITION }                                                        from '../modules/isoquant.nf'
-include { MINIMAP2 }                                                                            from '../modules/minimap2.nf'
 include { MERGE_ANNOTATION }                                                                    from '../modules/merge_annotation.nf'
 include { MERGE_FASTQ_EOULSAN }                                                                 from '../modules/merge_fastq.nf'
 include { RNA_BLOOM }                                                                           from '../modules/rnabloom.nf'
@@ -17,7 +16,7 @@ include { SAMPLESHEET2YAML }                                                    
 include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
 include { UNCOMPRESS_GENOME }                                                                   from '../modules/uncompress_files.nf'
 
-workflow ORIENTED_WORKFLOW {
+workflow EOULSAN_ORIENTED_WORKFLOW {
    take:
       annot
       config
@@ -45,7 +44,7 @@ workflow ORIENTED_WORKFLOW {
       // Transcript annotation modules: IsoQuant
       SAMTOOLS(sam)
       SAMPLESHEET2YAML(samplesheet)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy, params.novel_mono_exonic)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
