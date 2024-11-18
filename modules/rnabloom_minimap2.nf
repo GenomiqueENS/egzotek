@@ -21,14 +21,17 @@ process RNABLOOM_MINIMAP2 {
    input:
    path genome
    tuple val(condition), path(bloomfasta)
+   val intron_length
+   path junc_bed
    
    output:
    tuple val(condition), path( "${bloomfasta.SimpleName}.sam" ), emit: rnabloom_sam
    
    script:
+   def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
    """
-   minimap2 -ax splice -uf -k14 \
-   ${genome} ${bloomfasta} > ${bloomfasta.SimpleName}.sam
+   minimap2 -G ${intron_length} -ax splice -uf -k14 \
+   ${junc_bed_arg} ${genome} ${bloomfasta} > ${bloomfasta.SimpleName}.sam
    """
 
 }

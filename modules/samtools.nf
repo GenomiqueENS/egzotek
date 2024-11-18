@@ -20,8 +20,7 @@ process SAMTOOLS {
    path(sam)
 
    output:
-   path("${sam.SimpleName}.bam"), emit: samtools_bam
-   path("${sam.SimpleName}.bam.bai")
+   tuple path("${sam.SimpleName}.bam"), path("${sam.SimpleName}.bam.bai"), emit: samtools_bam
    val("process_complete"), emit: process_control
       
    script:

@@ -25,6 +25,6 @@ process SAMPLESHEET2YAML {
    
    script:
    """
-   python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml --path ${params.outdir}/bam
+   python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml
    """
 }  

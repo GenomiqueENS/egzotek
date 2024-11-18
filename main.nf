@@ -8,7 +8,9 @@
 */
 
 nextflow.enable.dsl=2
-if ( params.help ) {
+params.help = false
+
+if ( params.help) {
    help = """
    Usage:
       nextflow run main.nf --reads <path> --samplesheet <path> [options]
@@ -39,18 +41,6 @@ if ( params.help ) {
    exit(0)
 }
 
-// Display pipeline details
-println """\
-      T R A N S C R I P T - A N N O T A T I O N - N F   P I P E L I N E
-      ===================================
-      orientation : ${params.oriented}
-      fastq       : ${params.reads}
-      sam         : ${params.sam}
-      genome      : ${params.genome}
-      annotation  : ${params.annotation}
-      outdir      : ${params.outdir}
-      """
-      .stripIndent()
 
 /*
 ========================================================================================
@@ -67,7 +57,6 @@ include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotati
 */
 
 workflow{
-   genome_ch = file( params.genome )
    annot_ch = file( params.annotation )
    config_ch = file( params.config, checkIfExists:true )
    shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
@@ -77,8 +66,7 @@ workflow{
 
    if (params.oriented == false) {
       
-      NONORIENTED_WORKFLOW(genome_ch,
-                        annot_ch,
+      NONORIENTED_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
@@ -87,8 +75,7 @@ workflow{
    } else if (params.oriented == true) {
       sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      ORIENTED_WORKFLOW(genome_ch,
-                        annot_ch,
+      ORIENTED_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
@@ -129,9 +116,11 @@ log.info """\
    junction bed files minimap2           : ${params.junc_bed}
    IsoQuant model strategy               : ${params.model_strategy}
    RNABloom short read polishing data    : ${params.optional_shortread}
+   gffread parameters                    : ${params.gffread_parameters}
    outdir                                : ${params.outdir}
    """
    .stripIndent()
 
 /*
 ========================================================================================
+*/
