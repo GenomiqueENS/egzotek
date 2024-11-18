@@ -26,6 +26,7 @@ process ISOQUANT {
    path genome 
    path samplesheet
    val model_strategy
+   val novel_mono_exonic
 
    output:
    path( "isoquant/*/*_isoquant.gtf" ), emit: isoquant_gtf
@@ -39,6 +40,7 @@ process ISOQUANT {
    --clean_start                                   \
    --stranded forward                              \
    --model_construction_strategy ${model_strategy} \
+   --report_novel_unspliced ${novel_mono_exonic}   \
    -t 12                                           \
    -o isoquant \
    && for file in isoquant/*/*.transcript_models.gtf; do cp "\$file" "\${file%.transcript_models.gtf}_isoquant.gtf"; done

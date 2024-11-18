@@ -31,7 +31,8 @@ if ( params.help) {
       Optional arguments:
             --intron_length <value>	         Parameter for maximum intron length for Minimap2
             --junc_bed <path>	               Parameter for junction bed annotation for Minimap2
-            --model_strategy <value>	      Parameter for transcript model construction algorithm
+            --model_strategy <value>	      Parameter for IsoQuant transcript model construction algorithm
+            --novel_mono_exonic <value>	   Parameter for IsoQuant transcript model construction algorithm
             --optional_shortread <path>	   Path to Illumina reads for short-read polishing in RNA-Bloom
 
             -w       The NextFlow work directory. Delete the directory once the process
@@ -47,8 +48,9 @@ if ( params.help) {
    Pipeline Subworklows
 ========================================================================================
 */
-include { ORIENTED_WORKFLOW          } from './subworkflows/oriented_annotation'
-include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotation'
+include { EOULSAN_ORIENTED_WORKFLOW          } from './subworkflows/oriented_annotation_eoulsan'
+include { RESTRANDER_ORIENTED_WORKFLOW       } from './subworkflows/oriented_annotation_restrander'
+include { NONORIENTED_WORKFLOW               } from './subworkflows/nonoriented_annotation'
 
 /*
 ========================================================================================
@@ -72,10 +74,20 @@ workflow{
                         junc_bed_ch,
                         samplesheet_ch,
                         reads_ch)
-   } else if (params.oriented == true) {
+   } else if (params.oriented == true & params.restrander == true) {
       sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      ORIENTED_WORKFLOW(annot_ch,
+      RESTRANDER_ORIENTED_WORKFLOW(annot_ch,
+                        config_ch,
+                        shortread_ch,
+                        junc_bed_ch,
+                        samplesheet_ch,
+                        sam_ch,
+                        reads_ch)
+   } else if (params.oriented == true & params.restrander == false) {
+      sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
+
+      EOULSAN_ORIENTED_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
@@ -115,6 +127,7 @@ log.info """\
    intron length minimap2                : ${params.intron_length}
    junction bed files minimap2           : ${params.junc_bed}
    IsoQuant model strategy               : ${params.model_strategy}
+   IsoQuant model strategy               : ${params.novel_mono_exonic}
    RNABloom short read polishing data    : ${params.optional_shortread}
    gffread parameters                    : ${params.gffread_parameters}
    outdir                                : ${params.outdir}
