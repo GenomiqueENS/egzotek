@@ -10,7 +10,7 @@
 process RNA_BLOOM {
    // where to store the results and in which way
    debug true
-   cpus 16
+   label 'process_high'
    maxForks 1
    maxRetries 2
    
@@ -36,7 +36,7 @@ process RNA_BLOOM {
    -long ${longread} \
    -stranded    \
    ${shortread_arg} \
-   -t 12 \
+   -t $task.cpus \
    -outdir ${longread.SimpleName} \
    && cp  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
    """
