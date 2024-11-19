@@ -16,7 +16,7 @@ include { SAMPLESHEET2YAML }                                                    
 include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
 include { UNCOMPRESS_GENOME }                                                                   from '../modules/uncompress_files.nf'
 
-workflow EOULSAN_ORIENTED_WORKFLOW {
+workflow EOULSAN_WORKFLOW {
    take:
       annot
       config

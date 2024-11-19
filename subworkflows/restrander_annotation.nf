@@ -1,6 +1,6 @@
 /*
 ========================================================================================
-   ORIENTED_WORKFLOW Sub-Workflow
+   RESTRANDER_WORKFLOW Sub-Workflow
 ========================================================================================
 */
 
@@ -18,14 +18,13 @@ include { SAMPLESHEET2YAML }                                                    
 include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
 include { UNCOMPRESS_GENOME }                                                                   from '../modules/uncompress_files.nf'
 
-workflow RESTRANDER_ORIENTED_WORKFLOW {
+workflow RESTRANDER_WORKFLOW {
    take:
       annot
       config
       shortread
       junc_bed
       samplesheet
-      sam
       reads
       
    main:
@@ -67,3 +66,7 @@ workflow RESTRANDER_ORIENTED_WORKFLOW {
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
       MERGE_ANNOTATION(annot, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
 }
+
+
+
+

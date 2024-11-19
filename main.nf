@@ -48,9 +48,8 @@ if ( params.help) {
    Pipeline Subworklows
 ========================================================================================
 */
-include { EOULSAN_ORIENTED_WORKFLOW          } from './subworkflows/oriented_annotation_eoulsan'
-include { RESTRANDER_ORIENTED_WORKFLOW       } from './subworkflows/oriented_annotation_restrander'
-include { NONORIENTED_WORKFLOW               } from './subworkflows/nonoriented_annotation'
+include { EOULSAN_WORKFLOW       } from './subworkflows/eoulsan_annotation'
+include { RESTRANDER_WORKFLOW    } from './subworkflows/restrander_annotation'
 
 /*
 ========================================================================================
@@ -67,27 +66,16 @@ workflow{
    reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
 
    if (params.oriented == false) {
-      
-      NONORIENTED_WORKFLOW(annot_ch,
+      RESTRANDER_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
                         samplesheet_ch,
                         reads_ch)
-   } else if (params.oriented == true & params.restrander == true) {
+   } else if (params.oriented == true) {
       sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      RESTRANDER_ORIENTED_WORKFLOW(annot_ch,
-                        config_ch,
-                        shortread_ch,
-                        junc_bed_ch,
-                        samplesheet_ch,
-                        sam_ch,
-                        reads_ch)
-   } else if (params.oriented == true & params.restrander == false) {
-      sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
-
-      EOULSAN_ORIENTED_WORKFLOW(annot_ch,
+      EOULSAN_WORKFLOW(annot_ch,
                         config_ch,
                         shortread_ch,
                         junc_bed_ch,
