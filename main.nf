@@ -115,7 +115,7 @@ log.info """\
    intron length minimap2                : ${params.intron_length}
    junction bed files minimap2           : ${params.junc_bed}
    IsoQuant model strategy               : ${params.model_strategy}
-   IsoQuant model strategy               : ${params.novel_mono_exonic}
+   IsoQuant novel monoexonic             : ${params.novel_mono_exonic}
    RNABloom short read polishing data    : ${params.optional_shortread}
    gffread parameters                    : ${params.gffread_parameters}
    outdir                                : ${params.outdir}
