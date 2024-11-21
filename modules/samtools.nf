@@ -9,11 +9,8 @@
 */
 
 process SAMTOOLS {
-
-   // where to store the results and in which way
+   label 'process_high'
    publishDir( "${params.outdir}/bam", mode: 'copy' )
-
-   // show in the log which input file is analysed
    tag( "${sam}" )
 
    input:

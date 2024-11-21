@@ -12,7 +12,8 @@ process RNABLOOM_MINIMAP2 {
    // where to store the results and in which way
    debug true
    maxForks 1
-   cpus 24
+   label 'process_high'
+   
    publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed

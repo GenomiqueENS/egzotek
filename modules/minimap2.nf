@@ -12,7 +12,8 @@ process MINIMAP2 {
    // where to store the results and in which way
       debug true
       maxForks 1
-      cpus 14
+      label 'process_high'
+      
       publishDir( "${params.outdir}/sam", mode: 'copy' )
 
       // show in the log which input file is analysed
