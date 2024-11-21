@@ -11,7 +11,7 @@
 process ISOQUANT {
 
    // where to store the results and in which way
-   cpus 16
+   label 'process_high'
    maxForks 1
    
    publishDir( "${params.outdir}", mode: 'copy' )
@@ -41,7 +41,7 @@ process ISOQUANT {
    --stranded forward                              \
    --model_construction_strategy ${model_strategy} \
    --report_novel_unspliced ${novel_mono_exonic}   \
-   -t 12                                           \
+   -t $task.cpus                                   \
    -o isoquant \
    && for file in isoquant/*/*.transcript_models.gtf; do cp "\$file" "\${file%.transcript_models.gtf}_isoquant.gtf"; done
    """
