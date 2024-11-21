@@ -35,7 +35,7 @@ workflow RESTRANDER_WORKFLOW {
             UNCOMPRESS_GENOME(genome_ch)
             ch_isoquant_genome = UNCOMPRESS_GENOME.out.genome_isoquant
             ch_minimap2_genome = UNCOMPRESS_GENOME.out.genome_minimap2
-            ch_minimap2_rnabloom_genome = UNCOMPRESS_GENOME.out.genome_minimap2
+            ch_minimap2_rnabloom_genome = UNCOMPRESS_GENOME.out.genome_minimap2_rnabloom
             ch_gffread_genome  = UNCOMPRESS_GENOME.out.genome_gffread
       } else {
             ch_isoquant_genome = file( params.genome )
