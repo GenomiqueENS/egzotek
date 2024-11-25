@@ -78,7 +78,8 @@ Configuration for running the workflow:
 
 | Parameter         | Description                        | Default Value             |
 |-------------------|------------------------------------|---------------------------|
-| `threads`         | Number of threads to use           | `4`                       |
+| `threads`         | Number of threads to use           | `16`                      |
+| `memory`          | Memory space available to use      | `40.GB`                   |
 | `docker.runOptions` | Docker run options to use        | `'-u $(id -u):$(id -g)'`  |
 
 
