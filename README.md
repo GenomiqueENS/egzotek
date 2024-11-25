@@ -29,9 +29,15 @@ $ cd egzotek
 Customize runs by editing the nextflow.config file and/or specifying parameters at the command line.
 
 ## Usage
+When running Egzotek locally:
 ```bash
-$ nextflow run transcript_annotation.nf
+$ nextflow run main.nf
 ```
+When running Egzotek remotely:
+```bash
+$ nextflow run genomiqueens/egzotek -c nextflow.config
+```
+The config file needs to be modified with the path to your data and the type of analysis you wish to run.
 
 ### Pipeline Input Parameters
 
@@ -39,10 +45,10 @@ Here are the primary input parameters for configuring the workflow:
 
 | Parameter          | Description                                                   | Default Value                                 |
 |--------------------|---------------------------------------------------------------|-----------------------------------------------|
-| `reads`            | Path to the fastq files (required)                            | `test_data/*.fasta`                           |
-| `samplesheet`      | Path to the samplesheet file (required)                       | `test_data/samplesheet.csv`                   |
-| `genome`           | Path to the genome .fasta file (required)                     | `test_data/Treesei_QM6a.fasta`                |
-| `annotation`       | Path to the reference transcriptome .gtf file (required)      | `test_data/transcriptome.gtf`                 |
+| `reads`            | Path to the fastq files (required)                            | `/path/to/data/*.fasta`                       |
+| `samplesheet`      | Path to the samplesheet file (required)                       | `/path/to/data/samplesheet.csv`               |
+| `genome`           | Path to the genome .fasta file (required)                     | `/path/to/data/genome.fasta`                  |
+| `annotation`       | Path to the reference transcriptome .gtf file (required)      | `/path/to/data/transcriptome.gtf`             |
 | `oriented`         | Orientation of reads based on library protocol (required)     | `false`                                       |
 | `sam`              | Path to sam files after eoulsan (required if oriented=true)   | `null`                                        |
 
@@ -52,11 +58,13 @@ Configuration of tools used for annotation process:
 
 | Parameter          | Description                                                   | Default Value                                 |
 |--------------------|---------------------------------------------------------------|-----------------------------------------------|
-| `config`           | Path to Restrander configuration file (TSO and RTP sequences) (required if reads are non oriented)    | `/assets/PCB111.json`   |
+| `config`           | Path to Restrander configuration file (TSO and RTP sequences) (required if reads are non oriented)    | `"${projectDir}/assets/PCB111.json`   |
 | `intron_length`    | Parameter for maximum intron length for Minimap2              | `20000`                                       |
 | `junc_bed`         | Parameter for junction bed annotation for Minimap2            | null                                          |
-| `model_strategy`   | Parameter for transcript model construction algorithm         | `default_ont`                                 |
+| `model_strategy`   | Parameter for IsoQuant transcript model construction          | `default_ont`                                 |
+| `novel_mono_exonic`| Parameter for IsoQuant transcript model construction          | `true`                                        |
 | `optional_shortread`       | Path to Illumina shortreads .fasta file for RNA-Bloom      | `null`                                   |
+| `gffread_parameters` |  Parameter for gffread clustering                           | `-M`                                          |
 
 ### Additional Parameters
 
