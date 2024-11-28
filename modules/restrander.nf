@@ -12,13 +12,11 @@ params.OUTPUT = "${params.outdir}/restrander"
 */
 
 process RESTRANDER {
-   label 'process_high'
    
    // where to store the results and in which way
    publishDir( params.OUTPUT, mode: 'copy' )
 
    // show in the log which input file is analysed
-   debug true
    tag( "${fastq}" )
 
    input:

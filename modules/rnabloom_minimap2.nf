@@ -10,7 +10,6 @@
 
 process RNABLOOM_MINIMAP2 {
    // where to store the results and in which way
-   debug true
    maxForks 1
    label 'process_high'
    

@@ -14,7 +14,6 @@ process SAMPLESHEET2YAML {
    publishDir( "${params.outdir}/isoquant", mode: 'copy' )
 
    // show in the log which input file is analysed
-   debug true
    tag( "${samplesheet}" )
 
    input:

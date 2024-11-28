@@ -10,7 +10,6 @@
 
 process RNABLOOM_PAFTOOLS {
    // where to store the results and in which way
-   debug true
    publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
 
    // show in the log which input file is analysed

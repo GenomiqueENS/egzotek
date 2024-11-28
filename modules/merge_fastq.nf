@@ -8,7 +8,6 @@
 */
 process MERGE_FASTQ_RESTRANDER {
    // where to store the results and in which way
-   debug true
    publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
    
    tag( "${reads}" )
@@ -29,7 +28,6 @@ process MERGE_FASTQ_RESTRANDER {
 
 process MERGE_FASTQ_EOULSAN {
    // where to store the results and in which way
-   debug true
    publishDir( "${params.outdir}/rnabloom", mode: 'copy' )
    
    tag( "${reads}" )

@@ -14,7 +14,6 @@ process MERGE_ANNOTATION {
     publishDir( "${params.outdir}/consensus", mode: 'copy' )
 
     // show in the log which input file is analysed
-    debug true
     tag( "${merged_transcript}" )
 
     input:

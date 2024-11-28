@@ -17,7 +17,6 @@ process ISOQUANT {
    publishDir( "${params.outdir}", mode: 'copy' )
 
    // show in the log which input file is analysed
-   debug true
    tag( "${samplesheet}" )
 
    input:
@@ -50,7 +49,6 @@ process ISOQUANT {
 process ISOQUANT_CONDITION {
 
    // show in the log which input file is analysed
-   debug true
    tag( "${isoquant_gtf}" )
 
    input:
