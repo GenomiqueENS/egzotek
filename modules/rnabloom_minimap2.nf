@@ -26,7 +26,8 @@ process RNABLOOM_MINIMAP2 {
    
    output:
    tuple val(condition), path( "${bloomfasta.SimpleName}.sam" ), emit: rnabloom_sam
-   
+   val("process_complete"), emit: process_control
+
    script:
    def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
    """

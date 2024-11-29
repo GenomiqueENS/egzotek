@@ -41,12 +41,6 @@ workflow EOULSAN_WORKFLOW {
             ch_gffread_genome  = file( params.genome )
       }
 
-      // Transcript annotation modules: IsoQuant
-      SAMTOOLS(sam)
-      SAMPLESHEET2YAML(samplesheet)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy, params.novel_mono_exonic)
-      ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
-
       // Transcript annotation modules: RNABloom
       MERGE_FASTQ_EOULSAN(samplesheet, reads.collect())
       RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread)
@@ -54,6 +48,12 @@ workflow EOULSAN_WORKFLOW {
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
+
+      // Transcript annotation modules: IsoQuant
+      SAMTOOLS(sam)
+      SAMPLESHEET2YAML(samplesheet)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy, params.novel_mono_exonic)
+      ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Merging of transcript annotations
       AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))

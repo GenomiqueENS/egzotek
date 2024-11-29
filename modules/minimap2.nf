@@ -10,7 +10,6 @@
 
 process MINIMAP2 {
    // where to store the results and in which way
-      debug true
       maxForks 1
       label 'process_high'
       
@@ -20,6 +19,7 @@ process MINIMAP2 {
       tag( "${fasta}" )
       
       input:
+      val ready
       path genome
       path fasta
       val intron_length
