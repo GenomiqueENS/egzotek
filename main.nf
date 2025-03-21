@@ -1,14 +1,27 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-   Transcript Annotation Nextflow Workflow
+   Egzotek: A transcript annotation Nextflow workflow
 ========================================================================================
-   Github   :
+   Github   : https://github.com/GenomiqueENS/egzotek
    Contact  :
 ----------------------------------------------------------------------------------------
 */
 
 nextflow.enable.dsl=2
+
+manifest {
+    name            = 'egzotek'
+    author          = 'Salomé Brunon, Sophie Lemoine, Laurent Jourdren'
+    organization    = 'GenomiqueENS'
+    homePage        = 'https://github.com/GenomiqueENS/egzotek'
+    description     = 'Transcriptome annotation pipeline using Nanopore reads'
+    mainScript      = 'main.nf'
+    licence         = 'GPLv3'
+    nextflowVersion = '>=22.10.0'
+    version         = '0.2'
+}
+
 params.help = false
 
 if ( params.help) {
