@@ -74,7 +74,6 @@ workflow{
 
    assert params.reads : "No reads specified. Please provide reads with --reads"
    assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
-   assert params.genome : "No genome specified. Please provide reads with --genome"
    assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
 
    annot_file = file( params.annotation, checkIfExists:true )
@@ -86,12 +85,16 @@ workflow{
 
    if (params.oriented == false) {
       
-      NONORIENTED_WORKFLOW(annot_file,
-                        config_file,
-                        shortread_file,
-                        junc_bed_file,
-                        samplesheet_ch,
-                        reads_ch)
+      assert params.genome : "No genome specified. Please provide reads with --genome"
+      genome_file = file( params.genome, checkIfExists:true )
+
+      NONORIENTED_WORKFLOW(genome_file
+                           annot_file,
+                           config_file,
+                           shortread_file,
+                           junc_bed_file,
+                           samplesheet_ch,
+                           reads_ch)
    } else if (params.oriented == true) {
       
       assert params.sam : "No alignments specified. Please provide reads with --sam"
