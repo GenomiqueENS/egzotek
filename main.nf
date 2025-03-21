@@ -71,7 +71,14 @@ include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotati
 */
 
 workflow{
-   annot_ch = file( params.annotation )
+
+   assert params.reads : "No reads specified. Please provide reads with --reads"
+   assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
+   assert params.genome : "No genome specified. Please provide reads with --genome"
+   assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
+   assert params.sam : "No alignments specified. Please provide reads with --sam"
+
+   annot_ch = file( params.annotation, checkIfExists:true )
    config_ch = file( params.config, checkIfExists:true )
    shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
    junc_bed_ch = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
