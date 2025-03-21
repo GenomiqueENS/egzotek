@@ -19,13 +19,13 @@ include { UNCOMPRESS_GENOME }                                                   
 
 workflow ORIENTED_WORKFLOW {
    take:
-      annot
-      config
-      shortread
-      junc_bed
-      samplesheet
-      sam
-      reads
+      annot_file
+      config_file
+      shortread_file
+      junc_bed_file
+      samplesheet_ch
+      sam_ch
+      reads_ch
       
    main:
       // Prepare genome for different steps
@@ -43,15 +43,15 @@ workflow ORIENTED_WORKFLOW {
       }
 
       // Transcript annotation modules: IsoQuant
-      SAMTOOLS(sam)
-      SAMPLESHEET2YAML(samplesheet)
+      SAMTOOLS(sam_ch)
+      SAMPLESHEET2YAML(samplesheet_ch)
       ISOQUANT(SAMTOOLS.out.process_control.collect(), SAMTOOLS.out.samtools_bam.collect(), ch_isoquant_genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ_EOULSAN(samplesheet, reads.collect())
-      RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread)
-      RNABLOOM_MINIMAP2(ch_minimap2_genome, RNA_BLOOM.out.rnabloom_fasta, params.intron_length, junc_bed)
+      MERGE_FASTQ_EOULSAN(samplesheet_ch, reads_ch.collect())
+      RNA_BLOOM(MERGE_FASTQ_EOULSAN.out.merged_fastq.flatten(), shortread_file)
+      RNABLOOM_MINIMAP2(ch_minimap2_genome, RNA_BLOOM.out.rnabloom_fasta, params.intron_length, junc_bed_file)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
@@ -60,5 +60,5 @@ workflow ORIENTED_WORKFLOW {
       AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
       GFFREAD(ch_gffread_genome, AGAT_COMPLEMENT.out.polished_gtf, params.gffread_parameters)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
-      MERGE_ANNOTATION(annot, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+      MERGE_ANNOTATION(annot_file, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
 }

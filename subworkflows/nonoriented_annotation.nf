@@ -19,36 +19,36 @@ include { SAMTOOLS }                                                            
 
 workflow NONORIENTED_WORKFLOW {
    take: 
-      genome
-      annot
-      config
-      shortread
-      junc_bed
-      samplesheet
-      reads
+      genome_file
+      annot_file
+      config_file
+      shortread_file
+      junc_bed_file
+      samplesheet_ch
+      reads_ch
 
    main:
-      RESTRANDER(reads, config)
+      RESTRANDER(reads_ch, config_file)
       // Transcript annotation modules: Isoquant
-      MINIMAP2(genome, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed)
+      MINIMAP2(genome_file, RESTRANDER.out.restrander_fastq, params.intron_length, junc_bed_file)
       SAMTOOLS(MINIMAP2.out.isoquant_sam)
-      SAMPLESHEET2YAML(samplesheet)
-      ISOQUANT(SAMTOOLS.out.process_control.collect(), genome, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
+      SAMPLESHEET2YAML(samplesheet_ch)
+      ISOQUANT(SAMTOOLS.out.process_control.collect(), genome_file, SAMPLESHEET2YAML.out.dataset_yaml, params.model_strategy)
       ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
       // Transcript annotation modules: RNABloom
-      MERGE_FASTQ_RESTRANDER(samplesheet, reads, RESTRANDER.out.process_control.collect())
-      RNA_BLOOM(MERGE_FASTQ_RESTRANDER.out.merged_fastq.flatten(), shortread)
-      RNABLOOM_MINIMAP2(genome, RNA_BLOOM.out.rnabloom_fasta)
+      MERGE_FASTQ_RESTRANDER(samplesheet_ch, reads_ch, RESTRANDER.out.process_control.collect())
+      RNA_BLOOM(MERGE_FASTQ_RESTRANDER.out.merged_fastq.flatten(), shortread_file)
+      RNABLOOM_MINIMAP2(genome_file, RNA_BLOOM.out.rnabloom_fasta)
       RNABLOOM_PAFTOOLS(RNABLOOM_MINIMAP2.out.rnabloom_sam)
       RNABLOOM_AGAT_BED2GFF(RNABLOOM_PAFTOOLS.out.rnabloom_bed)
       RNABLOOM_AGAT_GFF2GTF(RNABLOOM_AGAT_BED2GFF.out.agat_gff)
 
       // Merging of transcript annotations
       AGAT_COMPLEMENT(ISOQUANT_CONDITION.out.isoquant_condition_gtf.join(RNABLOOM_AGAT_GFF2GTF.out.agat_gtf))
-      GFFREAD(genome, AGAT_COMPLEMENT.out.polished_gtf)
+      GFFREAD(genome_file, AGAT_COMPLEMENT.out.polished_gtf)
       MERGE_AGAT_GFF2GTF(GFFREAD.out.gffread_gff3)
-      MERGE_ANNOTATION(annot, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
+      MERGE_ANNOTATION(annot_file, MERGE_AGAT_GFF2GTF.out.merged_agat_gtf)
 }
 
 
