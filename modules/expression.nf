@@ -1,6 +1,3 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
-
 params.OUTPUT = "result/eoulsan"
 
 import fr.ens.biologie.genomique.kenetre.io.CompressionType

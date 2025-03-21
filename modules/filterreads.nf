@@ -1,6 +1,5 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
 params.OUTPUT = "result/eoulsan"
+
 import java.io.File
 import fr.ens.biologie.genomique.kenetre.util.StringUtils
 import fr.ens.biologie.genomique.kenetre.io.CompressionType

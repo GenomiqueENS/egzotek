@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
 params.OUTPUT= "result/eoulsan"
 
 import static fr.ens.biologie.genomique.kenetre.util.StringUtils.filenameWithoutExtension

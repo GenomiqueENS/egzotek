@@ -1,6 +1,5 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
 params.OUTPUT = "result/eoulsan"
+
 import fr.ens.biologie.genomique.kenetre.util.LocalReporter
 import fr.ens.biologie.genomique.kenetre.bio.alignmentfilter.MultiReadAlignmentFilterBuilder
 import fr.ens.biologie.genomique.kenetre.bio.alignmentfilter.ReadAlignmentFilterBuffer

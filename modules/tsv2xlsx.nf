@@ -1,6 +1,3 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
-
 import static fr.ens.biologie.genomique.kenetre.translator.TranslatorUtils.createDuplicatedEnsemblIdTranslator;
 
 import fr.ens.biologie.genomique.kenetre.bio.io.TSVAnnotationMatrixReader
