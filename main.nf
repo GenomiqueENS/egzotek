@@ -76,30 +76,31 @@ workflow{
    assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
    assert params.genome : "No genome specified. Please provide reads with --genome"
    assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
-   assert params.sam : "No alignments specified. Please provide reads with --sam"
 
-   annot_ch = file( params.annotation, checkIfExists:true )
-   config_ch = file( params.config, checkIfExists:true )
-   shortread_ch = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
-   junc_bed_ch = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
+   annot_file = file( params.annotation, checkIfExists:true )
+   config_file = file( params.config, checkIfExists:true )
+   shortread_file = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
+   junc_bed_file = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
    samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
    reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
 
    if (params.oriented == false) {
       
-      NONORIENTED_WORKFLOW(annot_ch,
-                        config_ch,
-                        shortread_ch,
-                        junc_bed_ch,
+      NONORIENTED_WORKFLOW(annot_file,
+                        config_file,
+                        shortread_file,
+                        junc_bed_file,
                         samplesheet_ch,
                         reads_ch)
    } else if (params.oriented == true) {
+      
+      assert params.sam : "No alignments specified. Please provide reads with --sam"
       sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      ORIENTED_WORKFLOW(annot_ch,
-                        config_ch,
-                        shortread_ch,
-                        junc_bed_ch,
+      ORIENTED_WORKFLOW(annot_file,
+                        config_file,
+                        shortread_file,
+                        junc_bed_file,
                         samplesheet_ch,
                         sam_ch,
                         reads_ch)
