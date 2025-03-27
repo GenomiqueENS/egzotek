@@ -107,6 +107,8 @@ workflow.onComplete {
       Duration    : ${workflow.duration}
       Success     : ${workflow.success}
       workDir     : ${workflow.workDir}
+      launchDir   : ${workflow.launchDir}
+      projectDir  : ${workflow.projectDir}
       exit status : ${workflow.exitStatus}
       """ : """
       Failed      : ${workflow.errorReport}
