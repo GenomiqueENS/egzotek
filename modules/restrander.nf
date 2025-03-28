@@ -4,17 +4,10 @@
 ========================================================================================
 */
 
-// Parameter definitions
-params.OUTPUT = "${params.outdir}/restrander"
-
-/*
-* Create Isoquant trancript model
-*/
-
 process RESTRANDER {
 
    // where to store the results and in which way
-   publishDir( params.OUTPUT, mode: 'copy' )
+   publishDir( "${params.outdir}/restrander", mode: 'copy' )
 
    // show in the log which input file is analysed
    debug true
@@ -35,6 +28,4 @@ process RESTRANDER {
    ${fastq.SimpleName}.fastq.gz  \
    ${config}
    """
-}  
-
-
+}

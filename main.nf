@@ -63,6 +63,7 @@ workflow{
    assert params.reads : "No reads specified. Please provide reads with --reads"
    assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
    assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
+   assert params.outdir : "No result directory specified. Please provide reads with --outdir"
 
    annot_file = file( params.annotation, checkIfExists:true )
    config_file = file( params.config, checkIfExists:true )

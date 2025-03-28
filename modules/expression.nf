@@ -9,7 +9,7 @@ include { read_conf; get_path; get_genome_desc; input_stream; output_stream } fr
 
 process EOULSAN_EXPRESSION {
  
-    publishDir( params.OUTPUT, mode: 'copy' )
+    publishDir( "${params.outdir}/expression", mode: 'copy' )
     
     input:
     tuple val(inSam), val(annot), val(genome)

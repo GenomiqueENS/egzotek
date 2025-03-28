@@ -86,7 +86,7 @@ process EOULSAN_INDEX {
 
     maxForks 1
     cpus Runtime.runtime.availableProcessors()
-    publishDir( params.OUTPUT, mode: 'copy' )
+    publishDir( "${params.outdir}/mapping", mode: 'copy' )
     
     input:
     val genome
@@ -148,7 +148,7 @@ process EOULSAN_MAPPING {
 
     maxForks 1
     cpus Runtime.runtime.availableProcessors()
-    publishDir( params.OUTPUT, mode: 'copy' )
+    publishDir( "${params.outdir}/mapping", mode: 'copy' )
     
     input:
     tuple val(inFastq), val(index)

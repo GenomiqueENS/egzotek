@@ -15,7 +15,7 @@ import htsjdk.samtools.SAMFileWriterFactory
  */
 process EOULSAN_SAM_FILTER {
  
-    publishDir( params.OUTPUT, mode: 'copy' )
+    publishDir( "${params.outdir}/filtersam", mode: 'copy' )
     
     input:
     val inSam
