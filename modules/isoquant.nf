@@ -14,7 +14,7 @@ process ISOQUANT {
    cpus 16
    maxForks 1
    
-   publishDir( "${params.outdir}", mode: 'copy' )
+   publishDir( "${params.outdir}", mode: 'link' )
 
    // show in the log which input file is analysed
    debug true

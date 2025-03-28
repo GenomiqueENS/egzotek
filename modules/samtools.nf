@@ -11,7 +11,7 @@
 process SAMTOOLS {
 
    // where to store the results and in which way
-   publishDir( "${params.outdir}/bam", mode: 'copy' )
+   publishDir( "${params.outdir}/bam", mode: 'link' )
 
    // show in the log which input file is analysed
    tag( "${sam}" )

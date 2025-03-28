@@ -11,7 +11,7 @@
 process SAMPLESHEET2YAML {
 
    // where to store the results and in which way
-   publishDir( "${params.outdir}/isoquant", mode: 'copy' )
+   publishDir( "${params.outdir}/isoquant", mode: 'link' )
 
    // show in the log which input file is analysed
    debug true

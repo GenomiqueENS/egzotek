@@ -11,7 +11,7 @@
 process GFFREAD {
    // where to store the results and in which way
     debug true
-    publishDir( "${params.outdir}/consensus", mode: 'copy' )
+    publishDir( "${params.outdir}/consensus", mode: 'link' )
 
     // show in the log which input file is analysed
     tag( "${polished_gtf}" )

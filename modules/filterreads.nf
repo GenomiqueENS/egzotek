@@ -14,7 +14,7 @@ import fr.ens.biologie.genomique.kenetre.bio.io.FastqWriter
 process EOULSAN_READ_FILTER_SR {
  
     debug true
-    publishDir( "${params.outdir}/filterreads", mode: 'copy' )
+    publishDir( "${params.outdir}/filterreads", mode: 'link' )
     
     input:
     val inFastq

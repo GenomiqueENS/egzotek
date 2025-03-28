@@ -11,7 +11,7 @@
 process MERGE_ANNOTATION {
 
    // where to store the results and in which way
-    publishDir( "${params.outdir}/consensus", mode: 'copy' )
+    publishDir( "${params.outdir}/consensus", mode: 'link' )
 
     // show in the log which input file is analysed
     debug true

@@ -7,7 +7,7 @@
 process RESTRANDER {
 
    // where to store the results and in which way
-   publishDir( "${params.outdir}/restrander", mode: 'copy' )
+   publishDir( "${params.outdir}/restrander", mode: 'link' )
 
    // show in the log which input file is analysed
    debug true

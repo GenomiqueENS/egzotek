@@ -14,7 +14,7 @@ process RNA_BLOOM {
    maxForks 1
    maxRetries 2
    
-   publishDir ("${params.outdir}/rnabloom", mode: 'copy')
+   publishDir ("${params.outdir}/rnabloom", mode: 'link')
 
    // show in the log which input file is analysed
    tag( "RNA-Bloom ${longread}" )

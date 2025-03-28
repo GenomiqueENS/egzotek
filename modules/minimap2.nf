@@ -13,7 +13,7 @@ process MINIMAP2 {
       debug true
       maxForks 1
       cpus 14
-      publishDir( "${params.outdir}/sam", mode: 'copy' )
+      publishDir( "${params.outdir}/sam", mode: 'link' )
 
       // show in the log which input file is analysed
       tag( "${fasta}" )
