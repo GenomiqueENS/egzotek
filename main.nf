@@ -49,8 +49,9 @@ if ( params.help) {
    Pipeline Subworklows
 ========================================================================================
 */
-include { ORIENTED_WORKFLOW          } from './subworkflows/oriented_annotation'
-include { NONORIENTED_WORKFLOW       } from './subworkflows/nonoriented_annotation'
+include { ORIENTED_WORKFLOW                 } from './subworkflows/oriented_annotation'
+include { NONORIENTED_WORKFLOW              } from './subworkflows/nonoriented_annotation'
+include { createFastqChannelFromSampleSheet } from './modules/samplesheet.nf'
 
 /*
 ========================================================================================
@@ -70,7 +71,7 @@ workflow{
    shortread_file = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
    junc_bed_file = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
    samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
-   reads_ch = Channel.fromPath( params.reads, checkIfExists:true )
+   reads_ch = createFastqChannelFromSampleSheet(params.samplesheet)
 
    if (params.oriented == false) {
       

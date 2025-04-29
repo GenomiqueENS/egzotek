@@ -8,23 +8,18 @@
 * Convert samplesheet into YAML for IsoQuant
 */
 
+include { csv2yaml } from './samplesheet.nf'
+
 process SAMPLESHEET2YAML {
 
-   // where to store the results and in which way
-   publishDir( "${params.outdir}/isoquant", mode: 'link' )
-
-   // show in the log which input file is analysed
    debug true
-   tag( "${samplesheet}" )
 
    input:
-   path samplesheet
+   val samplesheet
 
    output:
    path( "dataset.yaml" ), emit: dataset_yaml
    
-   script:
-   """
-   python3 $projectDir/bin/samplesheet2yaml.py --input ${samplesheet} --output dataset.yaml
-   """
-}  
+   exec:
+   csv2yaml(samplesheet.toRealPath(), task.workDir.resolve('dataset.yaml'))
+}
