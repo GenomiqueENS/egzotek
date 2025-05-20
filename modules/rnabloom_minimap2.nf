@@ -30,7 +30,7 @@ process RNABLOOM_MINIMAP2 {
    script:
    def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
    """
-   minimap2 -G ${intron_length} -ax splice -uf -k14 \
+   minimap2 -G ${intron_length} -ax splice -uf -k14 -t ${task.cpus} \
    ${junc_bed_arg} ${genome} ${bloomfasta} > ${bloomfasta.SimpleName}.sam
    """
 

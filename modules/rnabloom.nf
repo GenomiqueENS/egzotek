@@ -36,7 +36,7 @@ process RNA_BLOOM {
    -long ${longread} \
    -stranded    \
    ${shortread_arg} \
-   -t 12 \
+   -t ${task.cpus} \
    -outdir ${longread.SimpleName} \
    && cp  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
    """
