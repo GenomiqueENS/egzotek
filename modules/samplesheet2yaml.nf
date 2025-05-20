@@ -14,6 +14,9 @@ process SAMPLESHEET2YAML {
 
    debug true
 
+   // show in the log which input file is analysed
+   tag( "dataset.yaml" )
+
    input:
    val samplesheet
 

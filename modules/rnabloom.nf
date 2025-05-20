@@ -17,7 +17,7 @@ process RNA_BLOOM {
    publishDir ("${params.outdir}/rnabloom", mode: 'link')
 
    // show in the log which input file is analysed
-   tag( "RNA-Bloom ${longread}" )
+   tag( "${longread}" )
 
    input:
    path longread 

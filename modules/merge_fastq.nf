@@ -14,7 +14,8 @@ process MERGE_FASTQ {
    debug true
    publishDir( "${params.outdir}/rnabloom", mode: 'link' )
 
-   tag( "${reads}" )
+   // show in the log which input file is analysed
+   tag( "${entry[0]}.fastq" )
 
    input:
    val entry
