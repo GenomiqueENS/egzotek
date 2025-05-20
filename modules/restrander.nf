@@ -19,13 +19,13 @@ process RESTRANDER {
 
    output:
    path( "${fastq.SimpleName}.fastq.gz" ), emit: restrander_fastq
-   val(params.OUTPUT), emit: restrander_output_dir
-   val("process_complete"), emit: process_control 
+   path( "${fastq.SimpleName}.json" ), emit: restrander_stats
 
    script:
    """
    /usr/local/restrander/restrander ${fastq} \
-   ${fastq.SimpleName}.fastq.gz  \
-   ${config}
+   ${fastq.SimpleName}-restrander.fastq.gz  \
+   ${config} > ${fastq.SimpleName}.json && \
+   mv ${fastq.SimpleName}-restrander.fastq.gz ${fastq.SimpleName}.fastq.gz
    """
 }
