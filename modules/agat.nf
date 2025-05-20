@@ -26,7 +26,7 @@ process RNABLOOM_AGAT_BED2GFF {
    """
    /usr/local/bin/agat_convert_bed2gff.pl \
    --bed ${bloombed} \
-   -o ${bloombed.SimpleName}.gff
+   -o ${bloombed.SimpleName}.gff > agat.out 2> agat.err
    """
 }
 
@@ -52,7 +52,7 @@ process RNABLOOM_AGAT_GFF2GTF {
    """
    /usr/local/bin/agat_convert_sp_gff2gtf.pl \
    --gff ${agat_gtf} \
-   -o ${agat_gtf.SimpleName}_rnabloom.gtf
+   -o ${agat_gtf.SimpleName}_rnabloom.gtf > agat.out 2> agat.err
    """
 }
 
@@ -78,7 +78,7 @@ process MERGE_AGAT_GFF2GTF {
    """
    /usr/local/bin/agat_convert_sp_gff2gtf.pl \
    --gff ${merged_gff} \
-   -o ${condition}.merged_transcripts.gtf
+   -o ${condition}.merged_transcripts.gtf > agat.out 2> agat.err
    """
 }
 
@@ -106,6 +106,6 @@ process AGAT_COMPLEMENT {
    /usr/local/bin/agat_sp_complement_annotations.pl \
    --ref ${isoquant_gtf} \
    --add ${rnabloom_gtf} \
-   --out ${condition}.polished_transcriptome.gtf
+   --out ${condition}.polished_transcriptome.gtf > agat.out 2> agat.err
    """
 }

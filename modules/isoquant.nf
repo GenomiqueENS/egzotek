@@ -40,7 +40,7 @@ process ISOQUANT {
    --stranded forward                              \
    --model_construction_strategy ${model_strategy} \
    -t 12                                           \
-   -o isoquant \
+   -o isoquant > isoquant.out 2> isoquant.err      \
    && for file in isoquant/*/*.transcript_models.gtf; do cp "\$file" "\${file%.transcript_models.gtf}_isoquant.gtf"; done
    """
 }
