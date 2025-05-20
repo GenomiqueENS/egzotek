@@ -15,14 +15,13 @@ params.help = false
 if ( params.help) {
    help = """
    Usage:
-      nextflow run main.nf --reads <path> --samplesheet <path> [options]
+      nextflow run main.nf --samplesheet <path> [options]
 
    Description:
       EGZOTEK - TRANSCRIPTOME ANNOTATION PIPELINE USING NANOPORE READS
       Builds transcriptome annotations from nanopore data
 
       Required parameters:
-            --reads <path>                   Path to fastq nanopore reads.
             --samplesheet <path>	            Path to the samplesheet file
             --genome <path>	               Path to the genome file
             --annotation <path>          	   Path to the reference transcriptome file
@@ -61,7 +60,6 @@ include { createFastqChannelFromSampleSheet } from './modules/samplesheet.nf'
 
 workflow{
 
-   assert params.reads : "No reads specified. Please provide reads with --reads"
    assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
    assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
    assert params.genome : "No genome specified. Please provide reads with --genome"
@@ -120,7 +118,6 @@ workflow.onComplete {
 log.info """\
    EGZOTEK - TRANSCRIPTOME ANNOTATION PIPELINE USING NANOPORE READS
    ===================================
-   nanopore reads                        : ${params.reads}
    samplesheet                           : ${params.samplesheet}
    genome                                : ${params.genome}
    annotation                            : ${params.annotation}
