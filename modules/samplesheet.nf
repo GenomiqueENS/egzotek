@@ -133,3 +133,50 @@ def csv2yaml(csvFile, yamlFile) {
     }
 
 }
+
+
+def createConditionChannelFromSampleSheet(samplesheetFile) {
+
+    def samplesheetPath = null
+    if (samplesheetFile.class == String) {
+        samplesheetPath = Paths.get(samplesheetFile)
+    } else {
+        samplesheetPath = samplesheetFile
+    }
+
+    def samplesheetDir = samplesheetPath.getParent()
+    def entries = readCSV(samplesheetPath)
+
+    conditions = [:]
+
+    // Fill the conditions map from sample sheet
+    for (it in entries) {
+        c = it['condition']
+        s = it['fastq']
+        p = null
+
+        if (!conditions.containsKey(c)) {
+            conditions.put(c, [])
+        }
+        paths = conditions[c]
+
+        if (!s.startsWith('/')) {
+            p = Paths.get(samplesheetDir.toString(), s)
+        } else {
+            p =  Paths.get(s)
+        }
+
+        paths.add(p)
+    }
+
+    // Create the Channel from the conditions map
+    result = Channel.of()
+    conditions.each { k, v ->
+      l = [k]
+      l.addAll(v)
+      c = Channel.of(l)
+      result = result.concat(c)
+    }
+
+    return result
+}

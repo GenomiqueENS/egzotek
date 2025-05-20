@@ -64,38 +64,36 @@ workflow{
    assert params.reads : "No reads specified. Please provide reads with --reads"
    assert params.samplesheet : "No samplesheet specified. Please provide a samplesheet with --samplesheet"
    assert params.annotation : "No GFF3 annotation specified. Please provide reads with --annotation"
+   assert params.genome : "No genome specified. Please provide reads with --genome"
    assert params.outdir : "No result directory specified. Please provide reads with --outdir"
 
    annot_file = file( params.annotation, checkIfExists:true )
-   config_file = file( params.config, checkIfExists:true )
+   restrander_config_file = file( params.restrander_config, checkIfExists:true )
    shortread_file = params.optional_shortread != null ? file(params.optional_shortread, type: "file") : file("no_shortread", type: "file")
    junc_bed_file = params.junc_bed != null ? file(params.junc_bed, type: "file") : file("no_junc_bed", type: "file")
-   samplesheet_ch = Channel.fromPath( params.samplesheet, checkIfExists:true )
    reads_ch = createFastqChannelFromSampleSheet(params.samplesheet)
+   genome_file = file( params.genome, checkIfExists:true )
 
    if (params.oriented == false) {
-      
-      assert params.genome : "No genome specified. Please provide reads with --genome"
-      genome_file = file( params.genome, checkIfExists:true )
 
-      NONORIENTED_WORKFLOW(genome_file
+      NONORIENTED_WORKFLOW(genome_file,
                            annot_file,
-                           config_file,
+                           restrander_config_file,
                            shortread_file,
                            junc_bed_file,
-                           samplesheet_ch,
+                           params.samplesheet,
                            reads_ch)
    } else if (params.oriented == true) {
       
-      assert params.sam : "No alignments specified. Please provide reads with --sam"
-      sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
+      // assert params.sam : "No alignments specified. Please provide reads with --sam"
+      // sam_ch = Channel.fromPath( params.sam, checkIfExists:true )
 
-      ORIENTED_WORKFLOW(annot_file,
-                        config_file,
+      ORIENTED_WORKFLOW(genome_file,
+                        annot_file,
+                        restrander_config_file,
                         shortread_file,
                         junc_bed_file,
-                        samplesheet_ch,
-                        sam_ch,
+                        params.samplesheet,
                         reads_ch)
    }
 }
