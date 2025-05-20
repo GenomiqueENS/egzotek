@@ -52,8 +52,6 @@ process EOULSAN_SAM_FILTER {
     counterInvalid = 0
     pairedEnd = false
 
-
-
     // Get reader
     reader = SamReaderFactory.makeDefault().open(SamInputResource.of(inSamFile))
 
@@ -97,7 +95,6 @@ process EOULSAN_SAM_FILTER {
             // writing records
             for (r in records) {
                 outputSam.addAlignment(r)
-                //println(r)
                 counterOutput++
             }
 
@@ -115,7 +112,6 @@ process EOULSAN_SAM_FILTER {
     // writing records
     for (r in records) {
       outputSam.addAlignment(r)
-      //println(r)
       counterOutput++
     }
 
@@ -140,6 +136,4 @@ process EOULSAN_SAM_FILTER {
     // Close files
     reader.close()
     outputSam.close()
-
-    //println(reporter)
 }

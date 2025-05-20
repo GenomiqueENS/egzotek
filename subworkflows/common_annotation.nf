@@ -56,7 +56,6 @@ workflow COMMON_WORKFLOW {
 
         // Transcript annotation modules: RNABloom
         fastq_to_merge_ch = createConditionChannelFromSampleSheet(samplesheet_path)
-        fastq_to_merge_ch.collect().view()
         MERGE_FASTQ(fastq_to_merge_ch)
 
         RNA_BLOOM(MERGE_FASTQ.out.merged_fastq.flatten(), shortread_file)

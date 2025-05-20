@@ -24,10 +24,8 @@ import fr.ens.biologie.genomique.kenetre.util.StringUtils
 
 include { read_conf; get_path; get_genome_desc } from './common.nf'
 
-
 // The logger to use
 logger = new StandardErrorLogger("stderr", [:])
-//logger = new DummyLogger()
 
 
 def create_mapper_instance(mapperName, tmpDir, binaryDir, mapperVersion, mapperFlavor) {
@@ -165,7 +163,7 @@ process EOULSAN_MAPPING {
     path "${inFastq.baseName}.sam"
  
     exec:
-    println("Lolo task.cpus for mapping: " + task.cpus)
+
     // Convert inFastq to File object
     inFastqFile = file(inFastq).toFile()
     print(inFastqFile)

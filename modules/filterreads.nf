@@ -59,7 +59,6 @@ process EOULSAN_READ_FILTER_SR {
 
         // Test if read pass the filter
         if (filter.accept(read)) {
-            //println(read.toFastQ())
             writer.write(read)
 
             // Incremeent ouput read counter
@@ -75,6 +74,4 @@ process EOULSAN_READ_FILTER_SR {
 
     // Close the writer
     writer.close()
-
-    //println(reporter)
 }
