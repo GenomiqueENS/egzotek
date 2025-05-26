@@ -32,12 +32,15 @@ process RNA_BLOOM {
    def shortread_arg = shortread.name != 'no_shortread' ? "-ser $shortread" : ""
    condition = longread.SimpleName
    """
-   rnabloom    \
-   -long ${longread} \
-   -stranded    \
-   ${shortread_arg} \
-   -t ${task.cpus} \
-   -outdir ${longread.SimpleName} > rnabloom.out 2> rnabloom.err \
+   java \
+   -XX:MaxRAMPercentage=65.0 \
+   -jar /usr/local/lib/rnabloom-v*.jar \
+     -long ${longread} \
+     -stranded    \
+     ${shortread_arg} \
+     -t ${task.cpus} \
+     -outdir ${longread.SimpleName} \
+     > rnabloom.out 2> rnabloom.err \
    && cp  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
    """
 }  
