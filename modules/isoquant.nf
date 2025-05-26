@@ -9,11 +9,11 @@
 */
 
 process ISOQUANT {
+   debug true
+   label 'MEDIUM_MEM_TASK'
+   maxForks 1
 
    // where to store the results and in which way
-   cpus 16
-   maxForks 1
-   
    publishDir( "${params.outdir}", mode: 'link' )
 
    // show in the log which input file is analysed

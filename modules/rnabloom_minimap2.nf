@@ -9,10 +9,11 @@
 */
 
 process RNABLOOM_MINIMAP2 {
-   // where to store the results and in which way
+   label 'MEDIUM_MEM_TASK'
    debug true
    maxForks 1
-   cpus 24
+
+   // where to store the results and in which way
    publishDir( "${params.outdir}/rnabloom", mode: 'link' )
 
    // show in the log which input file is analysed

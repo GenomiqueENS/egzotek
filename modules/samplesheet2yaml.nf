@@ -11,7 +11,6 @@
 include { csv2yaml } from './samplesheet.nf'
 
 process SAMPLESHEET2YAML {
-
    debug true
 
    // show in the log which input file is analysed

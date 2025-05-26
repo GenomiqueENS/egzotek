@@ -8,12 +8,11 @@
 * RNA Bloom Transcript Model
 */
 process RNA_BLOOM {
-   // where to store the results and in which way
    debug true
-   cpus 16
+   label 'HIGH_MEM_TASK'
    maxForks 1
-   maxRetries 2
    
+   // where to store the results and in which way
    publishDir ("${params.outdir}/rnabloom", mode: 'link')
 
    // show in the log which input file is analysed

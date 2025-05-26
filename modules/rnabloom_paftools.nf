@@ -9,6 +9,8 @@
 */
 
 process RNABLOOM_PAFTOOLS {
+   debug true
+
    // where to store the results and in which way
    debug true
    publishDir( "${params.outdir}/rnabloom", mode: 'link' )

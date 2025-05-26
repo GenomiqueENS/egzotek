@@ -9,8 +9,9 @@
 */
 
 process GFFREAD {
-   // where to store the results and in which way
     debug true
+
+    // where to store the results and in which way
     publishDir( "${params.outdir}/consensus", mode: 'link' )
 
     // show in the log which input file is analysed

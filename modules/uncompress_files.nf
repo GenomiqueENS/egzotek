@@ -6,6 +6,8 @@
 
 process UNCOMPRESS_GENOME {
    debug true
+
+   // where to store the results and in which way
    publishDir( "${params.outdir}/ressources", mode: 'link' )
 
    tag( "${genome}" )

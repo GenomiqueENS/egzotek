@@ -40,7 +40,7 @@ def load_translator(annotFile) {
 }
 
 process EOULSAN_TSV2XLSX {
-
+    debug true
 
  input:
     tuple val(inTsv), val(additionalAnnot)

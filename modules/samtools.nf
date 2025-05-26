@@ -9,6 +9,7 @@
 */
 
 process SAMTOOLS {
+   debug true
 
    // where to store the results and in which way
    publishDir( "${params.outdir}/bam", mode: 'link' )

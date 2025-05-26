@@ -9,10 +9,11 @@
 */
 
 process MINIMAP2 {
-   // where to store the results and in which way
       debug true
+      label 'MEDIUM_MEM_TASK'
       maxForks 1
-      cpus 14
+
+      // where to store the results and in which way
       publishDir( "${params.outdir}/sam", mode: 'link' )
 
       // show in the log which input file is analysed
@@ -30,6 +31,6 @@ process MINIMAP2 {
       script:
       def junc_bed_arg = junc_bed.name != 'no_junc_bed' ? "--junc-bed $junc_bed" : ""
       """
-      minimap2 -t ${task.cpus} -G ${intron_length} -ax splice --secondary=no -uf -k14 ${junc_bed_arg} ${genome} ${fasta} >  ${fasta.SimpleName}.sam
+      minimap2 -t ${task.cpus} -G ${intron_length} -ax splice --secondary=no -uf -k14 ${junc_bed_arg} ${genome} ${fasta} > ${fasta.SimpleName}.sam
       """
 }

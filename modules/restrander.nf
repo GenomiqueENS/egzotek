@@ -5,6 +5,7 @@
 */
 
 process RESTRANDER {
+   debug true
 
    // where to store the results and in which way
    publishDir( "${params.outdir}/restrander", mode: 'link' )

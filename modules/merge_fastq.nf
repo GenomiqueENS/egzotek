@@ -10,8 +10,9 @@
 include { createConditionChannelFromSampleSheet } from './samplesheet.nf'
 
 process MERGE_FASTQ {
-   // where to store the results and in which way
    debug true
+
+   // where to store the results and in which way
    publishDir( "${params.outdir}/rnabloom", mode: 'link' )
 
    // show in the log which input file is analysed
