@@ -30,10 +30,14 @@ process MERGE_FASTQ {
 
    if (files.size() == 1 && (files.endsWith('.fq') || files.endsWith('.fastq') )) {
       """
+      #!/bin/bash
+
       ln -s $files ${condition_name}.fastq
       """
    } else {
    """
+   #!/bin/bash
+
    # Avoid exiting file
    > "${condition_name}.fastq"
 
