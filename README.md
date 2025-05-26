@@ -39,7 +39,6 @@ Here are the primary input parameters for configuring the workflow:
 
 | Parameter          | Description                                                   | Default Value                                 |
 |--------------------|---------------------------------------------------------------|-----------------------------------------------|
-| `reads`            | Path to the fastq files (required)                            | `test_data/*.fasta`                           |
 | `samplesheet`      | Path to the samplesheet file (required)                       | `test_data/samplesheet.csv`                   |
 | `genome`           | Path to the genome .fasta file (required)                     | `test_data/Treesei_QM6a.fasta`                |
 | `annotation`       | Path to the reference transcriptome .gtf file (required)      | `test_data/transcriptome.gtf`                 |
@@ -50,13 +49,13 @@ Here are the primary input parameters for configuring the workflow:
 
 Configuration of tools used for annotation process:
 
-| Parameter          | Description                                                   | Default Value                                 |
-|--------------------|---------------------------------------------------------------|-----------------------------------------------|
-| `config`           | Path to Restrander configuration file (TSO and RTP sequences) (required if reads are non oriented)    | `/assets/PCB111.json`   |
-| `intron_length`    | Parameter for maximum intron length for Minimap2              | `20000`                                       |
-| `junc_bed`         | Parameter for junction bed annotation for Minimap2            | null                                          |
-| `model_strategy`   | Parameter for transcript model construction algorithm         | `default_ont`                                 |
-| `optional_shortread`       | Path to Illumina shortreads .fasta file for RNA-Bloom      | `null`                                   |
+| Parameter            | Description                                                   | Default Value                                 |
+|----------------------|---------------------------------------------------------------|-----------------------------------------------|
+| `config`             | Path to Restrander configuration file (TSO and RTP sequences) (required if reads are non oriented)    | `/assets/PCB111.json`   |
+| `intron_length`      | Parameter for maximum intron length for Minimap2              | `20000`                                       |
+| `junc_bed`           | Parameter for junction bed annotation for Minimap2            | null                                          |
+| `model_strategy`     | Parameter for transcript model construction algorithm         | `default_ont`                                 |
+| `optional_shortread` | Path to Illumina shortreads .fasta file for RNA-Bloom         | `null`                                        |
 
 ### Additional Parameters
 
@@ -68,10 +67,10 @@ Configuration of tools used for annotation process:
 
 Configuration for running the workflow:
 
-| Parameter         | Description                        | Default Value             |
-|-------------------|------------------------------------|---------------------------|
-| `threads`         | Number of threads to use           | `4`                       |
-| `docker.runOptions` | Docker run options to use        | `'-u $(id -u):$(id -g)'`  |
+| Parameter           | Description                        | Default Value             |
+|---------------------|------------------------------------|---------------------------|
+| `threads`           | Number of threads to use           | `4`                       |
+| `docker.runOptions` | Docker run options to use          | `'-u $(id -u):$(id -g)'`  |
 
 
 ## Results
