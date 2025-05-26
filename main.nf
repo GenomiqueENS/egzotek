@@ -129,7 +129,11 @@ log.info """\
    IsoQuant model strategy               : ${params.model_strategy}
    RNABloom short read polishing data    : ${params.optional_shortread}
    gffread parameters                    : ${params.gffread_parameters}
-   outdir                                : ${params.outdir}
+   output directory                      : ${params.outdir}
+
+   workflow command line                 : ${workflow.commandLine}
+   workflow launch directory             : ${workflow.launchDir}
+   Nextflow version                      : ${nextflow.version}
    """
    .stripIndent()
 
