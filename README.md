@@ -30,7 +30,7 @@ Customize runs by editing the nextflow.config file and/or specifying parameters 
 
 ## Usage
 ```bash
-$ nextflow run transcript_annotation.nf
+$ nextflow run main.nf
 ```
 
 ### Pipeline Input Parameters
