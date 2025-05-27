@@ -24,7 +24,7 @@ process RESTRANDER {
 
    script:
    """
-   /usr/local/restrander/restrander ${fastq} \
+   restrander ${fastq} \
    ${fastq.SimpleName}-restrander.fastq.gz  \
    ${config} > ${fastq.SimpleName}.json && \
    mv ${fastq.SimpleName}-restrander.fastq.gz ${fastq.SimpleName}.fastq.gz
