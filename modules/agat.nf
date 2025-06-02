@@ -27,6 +27,7 @@ process RNABLOOM_AGAT_BED2GFF {
    """
    /usr/local/bin/agat_convert_bed2gff.pl \
    --bed ${bloombed} \
+   --source "RNABloom" \
    -o ${bloombed.SimpleName}.gff > agat.out 2> agat.err
    """
 }
