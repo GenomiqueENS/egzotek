@@ -1,5 +1,7 @@
 # Egzotek
-Egzotek is a bioinformatic pipeline designed for transcript annotation of non-model species with incomplete or poorly annotated genomes. It is developed to build a consensus annotated genome usig long RNA reads. 
+Egzotek is a bioinformatic pipeline designed for transcript annotation of non-model species with incomplete or poorly annotated genomes. It is developed to build a consensus annotated genome usig long RNA reads.
+
+Egzotek is the Nextflow version of the protocol that was developed by Sophie Lemoine and published on [Protocols.io](https://doi.org/10.17504/protocols.io.36wgqd5qyvk5/v1).
 
 ![transcriptannotation_wf](https://github.com/GenomiqueENS/egzotek/blob/dev/transcript_annotation_wf.png)
 
