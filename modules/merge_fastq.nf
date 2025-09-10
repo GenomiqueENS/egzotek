@@ -7,8 +7,6 @@
 * Merge Fast
 */
 
-include { createConditionChannelFromSampleSheet } from './samplesheet.nf'
-
 process MERGE_FASTQ {
    debug true
 
@@ -16,17 +14,15 @@ process MERGE_FASTQ {
    publishDir( "${params.outdir}/rnabloom", mode: 'link' )
 
    // show in the log which input file is analysed
-   tag( "${entry[0]}.fastq" )
+   tag( "${condition_name}.fastq" )
 
    input:
-   val entry
+   tuple val(condition_name), val(file_list)
 
    output:
    path( "*.fastq" ), emit: merged_fastq
 
    script:
-   condition_name = entry[0]
-   file_list = entry.subList(1, entry.size())
    files = file_list.join(' ')
 
    if (files.size() == 1 && (files.endsWith('.fq') || files.endsWith('.fastq') )) {
@@ -42,7 +38,7 @@ process MERGE_FASTQ {
    # Avoid exiting file
    > "${condition_name}.fastq"
 
-   # Parcourir tous les fichiers du répertoire
+   # For each FASTQ of the condition
    for file in ${files} ; do
       case "\$file" in
          *.gz)

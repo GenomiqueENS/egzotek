@@ -1,5 +1,3 @@
-import java.nio.file.Paths
-
 def readCSV(samplesheetFile) {
 
     // Read all CSV lines
@@ -33,8 +31,8 @@ def readCSV(samplesheetFile) {
 def createFastqChannelFromSampleSheet(samplesheetFile) {
 
     def samplesheetPath = null
-    if (samplesheetFile.class == String) {
-        samplesheetPath = Paths.get(samplesheetFile)
+    if (samplesheetFile.class instanceof CharSequence || samplesheetFile.class == org.codehaus.groovy.runtime.GStringImpl) {
+        samplesheetPath = java.nio.file.Paths.get(samplesheetFile)
     } else {
         samplesheetPath = samplesheetFile
     }
@@ -42,15 +40,15 @@ def createFastqChannelFromSampleSheet(samplesheetFile) {
     def samplesheetDir = samplesheetPath.getParent()
     def entries = readCSV(samplesheetPath)
 
-    paths = []
+    def paths = []
 
     for (it in entries) {
-        s = it['fastq']
-        p = null
+        def s = it['fastq']
+        def p = null
         if (!s.startsWith('/')) {
-            p = Paths.get(samplesheetDir.toString(), s)
+            p = java.nio.file.Paths.get(samplesheetDir.toString(), s)
         } else {
-            p =  Paths.get(s)
+            p =  java.nio.file.Paths.get(s)
         }
         paths.add(p)
     }
@@ -102,29 +100,29 @@ def csv2yaml(csvFile, yamlFile) {
 
     def samplesheetPath = null
     if (csvFile.class == String) {
-        samplesheetPath = Paths.get(csvFile)
+        samplesheetPath = java.nio.file.Paths.get(csvFile)
     } else {
         samplesheetPath = csvFile
     }
 
     def entries = readCSV(samplesheetPath)
-    data = [:]
+    def data = [:]
 
     for (it in entries) {
-        condition = it['condition']
+        def condition = it['condition']
         if (!data.containsKey(condition)) {
             data[condition] = ["name": condition, "long read files": [], "labels": []]
         }
 
-        fastqPath = it['fastq']
-        bamPath = fastqPath.replace('.gz', '').replace('.fastq', '.bam')
-        label = "Sample" + it['sample']
+        def fastqPath = it['fastq']
+        def bamPath = new File(fastqPath.replace('.gz', '').replace('.fastq', '.bam')).getName()
+        def label = "Sample" + it['sample']
 
         data[condition]["long read files"].add(bamPath)
         data[condition]["labels"].add(label)
     }
 
-    yamlMap = [["data format": "bam"]]
+    def yamlMap = [["data format": "bam"]]
     data.each{entry -> yamlMap.add(entry.value)}
 
     // Write YAML output file
@@ -135,11 +133,11 @@ def csv2yaml(csvFile, yamlFile) {
 }
 
 
-def createConditionChannelFromSampleSheet(samplesheetFile) {
+def createConditionFASTQFromSampleSheet(samplesheetFile) {
 
     def samplesheetPath = null
     if (samplesheetFile.class == String) {
-        samplesheetPath = Paths.get(samplesheetFile)
+        samplesheetPath = java.nio.file.Paths.get(samplesheetFile)
     } else {
         samplesheetPath = samplesheetFile
     }
@@ -147,36 +145,31 @@ def createConditionChannelFromSampleSheet(samplesheetFile) {
     def samplesheetDir = samplesheetPath.getParent()
     def entries = readCSV(samplesheetPath)
 
-    conditions = [:]
+    def conditions = [:]
 
     // Fill the conditions map from sample sheet
     for (it in entries) {
-        c = it['condition']
-        s = it['fastq']
-        p = null
+        def c = it['condition']
+        def s = it['fastq']
+        def p = null
 
         if (!conditions.containsKey(c)) {
             conditions.put(c, [])
         }
-        paths = conditions[c]
+        def paths = conditions[c]
 
         if (!s.startsWith('/')) {
-            p = Paths.get(samplesheetDir.toString(), s)
+            p = java.nio.file.Paths.get(samplesheetDir.toString(), s)
         } else {
-            p =  Paths.get(s)
+            p =  java.nio.file.Paths.get(s)
         }
 
         paths.add(p)
     }
 
-    // Create the Channel from the conditions map
-    result = Channel.of()
-    conditions.each { k, v ->
-      l = [k]
-      l.addAll(v)
-      c = Channel.of(l)
-      result = result.concat(c)
-    }
+    // Create tuples condition/FASTQ file
+    def result = []
+    conditions.each({ k,v ->  v.each { def l = [k, it ]  ; result.add(l) }})
 
     return result
 }

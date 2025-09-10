@@ -4,19 +4,22 @@
 ========================================================================================
 */
 
-include { GFFREAD }                                                                             from '../modules/gffread.nf'
-include { ISOQUANT; ISOQUANT_CONDITION }                                                        from '../modules/isoquant.nf'
-include { MINIMAP2 }                                                                            from '../modules/minimap2.nf'
-include { MERGE_ANNOTATION }                                                                    from '../modules/merge_annotation.nf'
-include { MERGE_FASTQ }                                                                         from '../modules/merge_fastq.nf'
-include { RNA_BLOOM }                                                                           from '../modules/rnabloom.nf'
-include { RNABLOOM_MINIMAP2 }                                                                   from '../modules/rnabloom_minimap2.nf'
-include { RNABLOOM_PAFTOOLS }                                                                   from '../modules/rnabloom_paftools.nf'
-include { RNABLOOM_AGAT_BED2GFF; RNABLOOM_AGAT_GFF2GTF; AGAT_COMPLEMENT; MERGE_AGAT_GFF2GTF }   from '../modules/agat.nf'
-include { SAMPLESHEET2YAML }                                                                    from '../modules/samplesheet2yaml.nf'
-include { SAMTOOLS }                                                                            from '../modules/samtools.nf'
-include { UNCOMPRESS_GENOME }                                                                   from '../modules/uncompress_files.nf'
-include { createConditionChannelFromSampleSheet }                                               from '../modules/samplesheet.nf'
+include { GFFREAD }                              from '../modules/gffread.nf'
+include { ISOQUANT; ISOQUANT_CONDITION }         from '../modules/isoquant.nf'
+include { MINIMAP2 }                             from '../modules/minimap2.nf'
+include { MERGE_ANNOTATION }                     from '../modules/merge_annotation.nf'
+include { MERGE_FASTQ }                          from '../modules/merge_fastq.nf'
+include { RNA_BLOOM }                            from '../modules/rnabloom.nf'
+include { RNABLOOM_MINIMAP2 }                    from '../modules/rnabloom_minimap2.nf'
+include { RNABLOOM_PAFTOOLS }                    from '../modules/rnabloom_paftools.nf'
+include { RNABLOOM_AGAT_BED2GFF}                 from '../modules/agat.nf'
+include { RNABLOOM_AGAT_GFF2GTF }                from '../modules/agat.nf'
+include { AGAT_COMPLEMENT}                       from '../modules/agat.nf'
+include { MERGE_AGAT_GFF2GTF }                   from '../modules/agat.nf'
+include { SAMPLESHEET2YAML }                     from '../modules/samplesheet2yaml.nf'
+include { SAMTOOLS }                             from '../modules/samtools.nf'
+include { UNCOMPRESS_GENOME }                    from '../modules/uncompress_files.nf'
+include { createConditionFASTQFromSampleSheet }  from '../modules/samplesheet.nf'
 
 workflow COMMON_WORKFLOW {
 
@@ -25,12 +28,10 @@ workflow COMMON_WORKFLOW {
       annot_file
       shortread_file
       junc_bed_file
-      samplesheet_path
+      samplesheet_ch
       reads_ch
 
     main:
-
-        samplesheet_ch = Channel.fromPath( samplesheet_path, checkIfExists:true )
 
         // Prepare genome for different steps
         if (genome_file.name.endsWith('.gz' )|| genome_file.name.endsWith(".bz2")){
@@ -55,7 +56,8 @@ workflow COMMON_WORKFLOW {
         ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
         // Transcript annotation modules: RNABloom
-        fastq_to_merge_ch = createConditionChannelFromSampleSheet(samplesheet_path)
+        fastq_to_merge_ch = samplesheet_ch.map {createConditionFASTQFromSampleSheet(it)}.flatMap().groupTuple()
+
         MERGE_FASTQ(fastq_to_merge_ch)
 
         RNA_BLOOM(MERGE_FASTQ.out.merged_fastq.flatten(), shortread_file)
