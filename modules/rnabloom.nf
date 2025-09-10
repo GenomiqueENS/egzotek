@@ -23,7 +23,7 @@ process RNA_BLOOM {
    path shortread
 
    output:
-   tuple val(condition), path("${longread.SimpleName}/${longread.SimpleName}.fa" ), emit: rnabloom_fasta
+   tuple val(condition), path("${longread.SimpleName}/rnabloom.transcripts.fa" ), emit: rnabloom_fasta
    path( "${longread.SimpleName}/*" )
    
    script:
@@ -39,7 +39,6 @@ process RNA_BLOOM {
      ${shortread_arg} \
      -t ${task.cpus} \
      -outdir ${longread.SimpleName} \
-     > rnabloom.out 2> rnabloom.err \
-   && cp  ${longread.SimpleName}/rnabloom.transcripts.fa ${longread.SimpleName}/${longread.SimpleName}.fa
+     > rnabloom.out 2> rnabloom.err
    """
 }  
