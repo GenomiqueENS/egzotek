@@ -28,7 +28,7 @@ def readCSV(samplesheetFile) {
     return result
 }
 
-def createFastqChannelFromSampleSheet(samplesheetFile) {
+def listFastqPathsFromSampleSheet(samplesheetFile) {
 
     def samplesheetPath = null
     if (samplesheetFile.class instanceof CharSequence || samplesheetFile.class == org.codehaus.groovy.runtime.GStringImpl) {
@@ -52,7 +52,7 @@ def createFastqChannelFromSampleSheet(samplesheetFile) {
         }
         paths.add(p)
     }
-    return Channel.fromList(paths)
+    return paths
 }
 
 

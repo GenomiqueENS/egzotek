@@ -18,7 +18,7 @@ workflow ORIENTED_WORKFLOW {
       restrander_config_file
       shortread_file
       junc_bed_file
-      samplesheet_path
+      samplesheet_ch
       reads_ch
       
    main:
@@ -30,7 +30,6 @@ workflow ORIENTED_WORKFLOW {
 
       // Update sample sheet
       all_ch = RESTRANDER.out.input_output_tuple.collect(flat: false)
-      samplesheet_ch = Channel.from(samplesheet_path)
       UPDATE_SAMPLESHEET_AFTER_RESTRANDER( all_ch, samplesheet_ch)
 
       COMMON_WORKFLOW(genome_file,
