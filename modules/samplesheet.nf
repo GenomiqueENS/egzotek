@@ -42,7 +42,7 @@ def createFastqChannelFromSampleSheet(samplesheetFile) {
 
     def paths = []
 
-    for (it in entries) {
+    entries.each {
         def s = it['fastq']
         def p = null
         if (!s.startsWith('/')) {
@@ -108,7 +108,7 @@ def csv2yaml(csvFile, yamlFile) {
     def entries = readCSV(samplesheetPath)
     def data = [:]
 
-    for (it in entries) {
+    entries.each {
         def condition = it['condition']
         if (!data.containsKey(condition)) {
             data[condition] = ["name": condition, "long read files": [], "labels": []]
@@ -148,7 +148,7 @@ def createConditionFASTQFromSampleSheet(samplesheetFile) {
     def conditions = [:]
 
     // Fill the conditions map from sample sheet
-    for (it in entries) {
+    entries.each {
         def c = it['condition']
         def s = it['fastq']
         def p = null
