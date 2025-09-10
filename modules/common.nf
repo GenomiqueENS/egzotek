@@ -11,7 +11,7 @@ logger = new DummyLogger()
 
 def read_conf(conf_path = null) {
 
-    result = [:]
+    def result = [:]
     if (conf_path == null) {
         conf_path = System.getProperty("user.home") + "/.eoulsan-nf"
     }
@@ -22,9 +22,9 @@ def read_conf(conf_path = null) {
         return result
     }
 
-    content = conf_file.eachLine {
+    def content = conf_file.eachLine {
         line -> {
-            fields = line.split('=')
+            def fields = line.split('=')
             if (fields.length ==2 ) {
             result[fields[0].trim()] = fields[1].trim()
             }
@@ -70,7 +70,7 @@ def get_path(p, storages) {
 
 def create_channel_from_path(p, storages) {
 
-    unix_path = get_path(p, storages)
+    def unix_path = get_path(p, storages)
     return Channel.value(unix_path.toPath())
 }
 
@@ -88,12 +88,12 @@ def get_genome_desc(p, storages) {
         return p
     }
 
-    unix_file = get_path(p, storages)
+    def unix_file = get_path(p, storages)
 
     if (storages.containsKey("main.genome.desc.storage.path") ) {
         gds = FileGenomeDescStorage.getInstance(storages["main.genome.desc.storage.path"], logger)
 
-        result = gds.get(unix_file.toString())
+        def result = gds.get(unix_file.toString())
         if (result != null) {
             return result
         }
@@ -105,13 +105,13 @@ def get_genome_desc(p, storages) {
 
 def input_stream(p) {
 
-    ct = CompressionType.getCompressionTypeByFile(p)
+    def ct = CompressionType.getCompressionTypeByFile(p)
     return ct.open(p)
 }
 
 def output_stream(p) {
 
-    ct = CompressionType.getCompressionTypeByFile(p)
+    def ct = CompressionType.getCompressionTypeByFile(p)
     return ct.create(p)
 }
 
