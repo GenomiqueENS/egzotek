@@ -24,7 +24,7 @@ process MERGE_ANNOTATION {
     output:
     tuple val(condition), path( "${condition}.merged_annotation.gtf" ), emit: merged_annotation
     
-    script:   
+    script:
     """
     bash $projectDir/bin/merge-annotation.sh ${annotation} \
     ${merged_transcript} > ${condition}.merged_annotation.gtf
