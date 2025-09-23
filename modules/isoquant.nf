@@ -25,7 +25,7 @@ process ISOQUANT {
    path bams
    path genome 
    path samplesheet
-   val model_strategy
+   val isoquant_parameters
 
    output:
    path( "isoquant/*/*.transcript_models.gtf" ), emit: isoquant_gtf
@@ -38,7 +38,7 @@ process ISOQUANT {
    --data_type nanopore                            \
    --clean_start                                   \
    --stranded forward                              \
-   --model_construction_strategy ${model_strategy} \
+   ${isoquant_parameters}                          \
    --threads ${task.cpus}                          \
    --output isoquant > isoquant.out 2> isoquant.err
    """

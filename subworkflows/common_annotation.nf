@@ -52,7 +52,7 @@ workflow COMMON_WORKFLOW {
                  SAMTOOLS.out.samtools_bam.collect(),
                  ch_isoquant_genome,
                  SAMPLESHEET2YAML.out.dataset_yaml,
-                 params.model_strategy)
+                 params.isoquant_parameters)
         ISOQUANT_CONDITION(ISOQUANT.out.isoquant_gtf.flatten())
 
         // Transcript annotation modules: RNABloom

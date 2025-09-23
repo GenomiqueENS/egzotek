@@ -32,7 +32,8 @@ if ( params.help) {
       Optional arguments:
             --intron_length <value>	         Parameter for maximum intron length for Minimap2
             --junc_bed <path>	               Parameter for junction bed annotation for Minimap2
-            --model_strategy <value>	      Parameter for transcript model construction algorithm
+            --isoquant_parameters <value>	   Parameter(s) for IsoQuant
+            --gffread_parameters <value>     Parameter(s) for GFFRead
             --optional_shortread <path>	   Path to Illumina reads for short-read polishing in RNA-Bloom
 
             -w       The NextFlow work directory. Delete the directory once the process
@@ -128,7 +129,7 @@ log.info """\
    restrander config file                : ${params.config}
    intron length minimap2                : ${params.intron_length}
    junction bed files minimap2           : ${params.junc_bed}
-   IsoQuant model strategy               : ${params.model_strategy}
+   IsoQuant parameters                   : ${params.isoquant_parameters}
    RNABloom short read polishing data    : ${params.optional_shortread}
    gffread parameters                    : ${params.gffread_parameters}
    output directory                      : ${params.outdir}
