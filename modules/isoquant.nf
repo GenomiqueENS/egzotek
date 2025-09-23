@@ -18,13 +18,13 @@ process ISOQUANT {
 
    // show in the log which input file is analysed
    debug true
-   tag( "${samplesheet}" )
+   tag( "${yaml_samplesheet}" )
 
    input:
    val ready
    path bams
    path genome 
-   path samplesheet
+   path yaml_samplesheet
    val isoquant_parameters
 
    output:
@@ -34,7 +34,7 @@ process ISOQUANT {
    script:
    """
    isoquant.py --reference ${genome}               \
-   --yaml ${samplesheet}                           \
+   --yaml ${yaml_samplesheet}                      \
    --data_type nanopore                            \
    --clean_start                                   \
    --stranded forward                              \
